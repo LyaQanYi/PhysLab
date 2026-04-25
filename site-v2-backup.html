@@ -542,9 +542,87 @@
     .tab-panel.active { display: block; }
 
     /* ===== Tab: Principle ===== */
-    .principle-layout { display: flex; gap: 32px; flex-wrap: wrap; }
-    .principle-left { flex: 1.5; min-width: 400px; }
-    .principle-right { flex: 1; min-width: 300px; }
+    .principle-layout { display: flex; flex-direction: column; gap: 24px; }
+    .principle-left { width: 100%; }
+    .principle-right { width: 100%; }
+
+    /* ===== 顶部实验介绍 ===== */
+    .principle-intro {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FAFAFA 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 28px 22px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+    .intro-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary-dark);
+      background: rgba(13,148,136,0.10);
+      padding: 4px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.4px;
+      margin-bottom: 12px;
+    }
+    .intro-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--dark);
+      margin: 0 0 14px;
+      line-height: 1.35;
+    }
+    .intro-lead {
+      font-size: 14.5px;
+      line-height: 1.85;
+      color: var(--text);
+      margin: 0 0 12px;
+    }
+    .intro-lead:last-of-type { margin-bottom: 0; }
+    .intro-lead b { color: var(--primary-dark); font-weight: 600; }
+    .intro-points {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px dashed var(--border);
+    }
+    .intro-point {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      background: rgba(13,148,136,0.04);
+      border-radius: 8px;
+      border-left: 3px solid var(--primary);
+    }
+    .intro-point-icon {
+      font-size: 18px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .intro-point-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .intro-point-text b {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .intro-point-text span {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    @media (max-width: 768px) {
+      .intro-points { grid-template-columns: 1fr; }
+      .intro-title { font-size: 19px; }
+    }
 
     .principle-left p { margin-bottom: 20px; color: var(--text); }
 
@@ -680,6 +758,342 @@
     .legend { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
     .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); }
     .legend-color { width: 16px; height: 16px; border-radius: 4px; }
+
+    /* ===== 同轴电极示意图（重做版） ===== */
+    .diagram-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #F0FDFA 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px 22px;
+      box-shadow: 0 4px 18px rgba(13,148,136,0.06);
+    }
+    .dc-content {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .dc-side {
+      flex: 1 1 320px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .diagram-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .diagram-card-head h4 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .diagram-tag {
+      font-size: 11px;
+      color: var(--primary-dark);
+      background: rgba(13,148,136,0.1);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .coax-svg-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4px 0;
+      flex: 0 0 auto;
+    }
+    .coax-svg {
+      width: 320px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    .coax-svg line[marker-end] { transition: stroke 0.2s, stroke-width 0.2s; }
+    .coax-svg:hover line[marker-end] { stroke: #FB923C; }
+    .diagram-legend {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 14px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(13,148,136,0.12);
+      border-radius: 10px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+    }
+    .diagram-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1.4;
+    }
+    .diagram-legend-item b {
+      color: var(--dark);
+      font-weight: 600;
+    }
+    .dl-mark {
+      flex-shrink: 0;
+      width: 22px;
+      height: 14px;
+      border-radius: 4px;
+      position: relative;
+    }
+    .dl-mark.dl-inner {
+      background: linear-gradient(135deg, #1F7873, #0B3735);
+      border-radius: 50%;
+      width: 14px; height: 14px;
+    }
+    .dl-mark.dl-outer {
+      background: #fff;
+      border: 2px solid #0D9488;
+      border-radius: 50%;
+      width: 14px; height: 14px;
+    }
+    .dl-mark.dl-equi {
+      border: none;
+      background: repeating-linear-gradient(
+        90deg,
+        #14B8A6 0 5px,
+        transparent 5px 9px
+      );
+      height: 2px;
+      align-self: center;
+    }
+    .dl-mark.dl-field {
+      background: #F97316;
+      height: 2px;
+      align-self: center;
+      position: relative;
+    }
+    .dl-mark.dl-field::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 4px solid transparent;
+      border-left-color: #F97316;
+      border-right-width: 0;
+    }
+    .diagram-tip {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: rgba(249,115,22,0.08);
+      border-left: 3px solid var(--accent);
+      border-radius: 4px 8px 8px 4px;
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .dc-toggle {
+      display: flex;
+      gap: 3px;
+      background: #f3f4f6;
+      border-radius: 6px;
+      padding: 3px;
+    }
+    .dc-tab {
+      padding: 4px 12px;
+      font-size: 12px;
+      border: none;
+      background: transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .dc-tab:hover { color: var(--primary); }
+    .dc-tab.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+      font-weight: 600;
+    }
+    .dl-mark.dl-plate {
+      width: 5px;
+      height: 18px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, #1F7873, #0B3735);
+    }
+
+    /* ===== 原理页扩展板块 ===== */
+    .key-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: linear-gradient(135deg, rgba(13,148,136,0.10), rgba(20,184,166,0.04));
+      border-left: 4px solid var(--primary);
+      padding: 16px 20px;
+      border-radius: 6px 10px 10px 6px;
+      margin-bottom: 22px;
+    }
+    .key-banner-icon { font-size: 26px; line-height: 1; flex-shrink: 0; }
+    .key-banner-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+    }
+    .key-banner-body p {
+      margin: 0;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+    .key-banner-body b { color: var(--dark); font-weight: 600; }
+
+    .principle-h3 {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--dark);
+      margin: 28px 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      line-height: 1.3;
+    }
+    .principle-h3::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 18px;
+      background: var(--primary);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .analogy-table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .analogy-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .analogy-table th {
+      padding: 10px 14px;
+      background: var(--bg);
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .analogy-table th.col-static { color: var(--primary-dark); }
+    .analogy-table th.col-current { color: #C2410C; }
+    .analogy-table td {
+      padding: 9px 14px;
+      border-top: 1px solid var(--border);
+      color: var(--text);
+    }
+    .analogy-table tbody tr:first-child td { border-top: none; }
+    .analogy-table td:first-child {
+      font-weight: 600;
+      color: var(--text-secondary);
+      width: 22%;
+      background: rgba(13,148,136,0.02);
+    }
+    .analogy-table i { font-style: italic; font-weight: 700; color: var(--dark); }
+
+    .analogy-note {
+      background: rgba(13,148,136,0.06);
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--text);
+      border-left: 3px solid var(--primary);
+      line-height: 1.7;
+    }
+    .analogy-note b { color: var(--primary-dark); font-weight: 700; }
+
+    .derive-steps {
+      margin: -2px 0 8px;
+      padding: 4px 14px;
+      background: rgba(13,148,136,0.03);
+      border-radius: 8px;
+    }
+    .derive-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      font-size: 13.5px;
+      color: var(--text);
+      line-height: 1.7;
+    }
+    .derive-item + .derive-item {
+      border-top: 1px dashed var(--border);
+    }
+    .derive-tag {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 1px;
+    }
+    .derive-item code {
+      background: #fff;
+      color: var(--primary-dark);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      border: 1px solid rgba(13,148,136,0.18);
+    }
+    .derive-item i { font-style: italic; font-weight: 700; color: var(--dark); }
+
+    .formula-caption {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin: 0 0 16px;
+      line-height: 1.75;
+    }
+    .formula-caption b { color: var(--dark); font-weight: 600; }
+    .formula-caption i { color: var(--primary-dark); font-style: italic; font-weight: 600; }
+
+    .concept-card p b { color: var(--dark); font-weight: 600; }
+
+    .condition-card {
+      background: linear-gradient(135deg, rgba(234,179,8,0.07), rgba(234,179,8,0.02));
+      border: 1px solid rgba(234,179,8,0.30);
+      border-radius: 10px;
+      padding: 14px 20px 16px;
+      margin-top: 24px;
+    }
+    .condition-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #92400E;
+      margin-bottom: 10px;
+    }
+    .condition-list {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 13.5px;
+      line-height: 1.9;
+      color: var(--text);
+    }
+    .condition-list li { margin-bottom: 2px; }
+    .condition-list li::marker { color: var(--warning); }
+    .condition-list b { color: var(--dark); font-weight: 600; }
 
     /* ===== Tab: Experiment ===== */
     .exp-layout { display: flex; gap: 24px; height: calc(100vh - 200px); min-height: 560px; }
@@ -856,23 +1270,65 @@
       color: var(--dark);
       margin-bottom: 20px;
     }
-    .bar-chart { display: flex; align-items: flex-end; gap: 16px; height: 160px; padding: 0 20px; }
-    .bar-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .bar-chart { display: flex; align-items: flex-end; gap: 16px; height: 180px; padding: 0 12px; }
+    .bar-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+    .bar-value { font-size: 11px; color: var(--text-secondary); font-weight: 600; font-variant-numeric: tabular-nums; }
     .bar {
       width: 100%;
+      max-width: 56px;
       border-radius: 6px 6px 0 0;
-      min-height: 20px;
+      min-height: 4px;
       transition: height 0.8s ease;
-    }
-    .bar-label { font-size: 12px; color: var(--text-secondary); }
-    .line-chart {
-      height: 160px;
       position: relative;
-      display: flex;
-      align-items: flex-end;
-      padding: 0 10px 20px;
     }
-    .line-chart svg { width: 100%; height: 100%; }
+    .bar:hover { filter: brightness(1.1); }
+    .bar-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+    .line-chart {
+      height: 240px;
+      position: relative;
+    }
+    .line-chart svg { width: 100%; height: 100%; display: block; }
+    .line-chart svg circle { transition: r 0.15s; cursor: pointer; }
+    .line-chart svg circle:hover { r: 5.5; }
+    .chart-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      gap: 12px;
+    }
+    .chart-head h4 { margin: 0 !important; }
+    .stat-value.red { color: var(--error); }
+    .stat-value.orange { color: #EA580C; }
+    .analysis-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .analysis-mode-tag {
+      padding: 4px 12px;
+      background: rgba(13,148,136,0.1);
+      color: var(--primary-dark);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .analysis-empty {
+      padding: 32px 16px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+    .chart-empty {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
 
     .data-table-wrap {
       background: var(--card);
@@ -901,6 +1357,28 @@
     .data-table tbody tr { border-top: 1px solid var(--border); transition: background 0.2s; }
     .data-table tbody tr:hover { background: #F9FAFB; }
     .data-table td { color: var(--text); }
+    /* 表格滚动：最多约 10 行可见，表头粘顶 */
+    .data-table-scroll {
+      max-height: 460px; /* ≈ 10 行 × 行高 + 表头 */
+      overflow-y: auto;
+    }
+    .data-table-scroll thead th {
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 2;
+      box-shadow: inset 0 -1px 0 var(--border);
+    }
+    .data-table-scroll::-webkit-scrollbar { width: 8px; }
+    .data-table-scroll::-webkit-scrollbar-track { background: #fafafa; }
+    .data-table-scroll::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 4px; }
+    .data-table-scroll::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+    .detail-count {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 400;
+      margin-left: 8px;
+    }
 
     /* ===== Tab: Report ===== */
     .report-actions { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
@@ -1066,6 +1544,393 @@
       .charts-row { flex-direction: column; }
       .paper { padding: 32px 24px; }
       .paper-info { grid-template-columns: 1fr; }
+    }
+
+    /* ===== 静电场模拟工具（嵌入版，类名 exp-* 作用域隔离） ===== */
+    .exp-embed {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 200px);
+      min-height: 600px;
+      background: #f0f2f5;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      color: #333;
+      font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    }
+    .exp-tabs {
+      display: flex;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+    .exp-tab {
+      padding: 10px 24px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      font-weight: 500;
+      color: #666;
+      transition: all 0.25s;
+      user-select: none;
+      font-size: 14px;
+    }
+    .exp-tab:hover { color: var(--primary); background: #f8f9fa; }
+    .exp-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: #f8f9fa;
+    }
+    .exp-container {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      padding: 16px;
+      gap: 16px;
+    }
+    .exp-embed .panel {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .exp-left {
+      width: 380px;
+      min-width: 380px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .exp-left::-webkit-scrollbar { width: 6px; }
+    .exp-left::-webkit-scrollbar-track { background: #f1f1f1; }
+    .exp-left::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+    .exp-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .exp-section { border-bottom: 1px solid #eee; }
+    .exp-section-header {
+      padding: 12px 16px;
+      background: #f8f9fa;
+      font-weight: 600;
+      font-size: 14px;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+    .exp-section-body { padding: 14px 16px; }
+    .exp-form-row { display: flex; gap: 10px; margin-bottom: 10px; }
+    .exp-form-group { flex: 1; }
+    .exp-form-group label {
+      display: block;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .exp-form-group input {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1px solid #d0d7de;
+      border-radius: 5px;
+      font-size: 13px;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    .exp-form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
+    }
+    .exp-equi-card {
+      border: 1px solid #e1e4e8;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .exp-equi-header {
+      background: #f1f8ff;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #e1e4e8;
+    }
+    .exp-equi-header input {
+      width: 80px;
+      padding: 5px 8px;
+      border: 1px solid #d0d7de;
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+    .exp-equi-header span { font-size: 13px; color: #555; }
+    .exp-btn-small {
+      padding: 5px 10px;
+      font-size: 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+      font-family: inherit;
+    }
+    .exp-btn-add { background: #28a745; color: #fff; }
+    .exp-btn-add:hover { background: #218838; }
+    .exp-btn-del { background: #dc3545; color: #fff; }
+    .exp-btn-del:hover { background: #c82333; }
+    .exp-btn-icon { padding: 4px 8px; font-size: 16px; line-height: 1; }
+    .exp-point-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .exp-point-table th {
+      background: #f6f8fa;
+      padding: 6px 8px;
+      text-align: left;
+      font-weight: 600;
+      color: #555;
+      font-size: 12px;
+      border-bottom: 1px solid #e1e4e8;
+    }
+    .exp-point-table td { padding: 4px 8px; border-bottom: 1px solid #f0f0f0; }
+    .exp-point-table input {
+      width: 70px;
+      padding: 4px 6px;
+      border: 1px solid #d0d7de;
+      border-radius: 3px;
+      font-size: 12px;
+      font-family: inherit;
+    }
+    .exp-point-table input:focus { outline: none; border-color: var(--primary); }
+    .exp-btn-row {
+      padding: 8px 12px;
+      background: #fafbfc;
+      border-top: 1px solid #e1e4e8;
+    }
+    .exp-btn {
+      padding: 10px 18px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+    }
+    .exp-btn-primary { background: var(--primary); color: #fff; }
+    .exp-btn-primary:hover { background: var(--primary-dark); }
+    .exp-btn-success { background: var(--success); color: #fff; }
+    .exp-btn-success:hover { background: #16a34a; }
+    .exp-canvas-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fafbfc;
+      padding: 16px;
+      min-height: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .exp-canvas-wrap canvas { cursor: crosshair; }
+    .exp-hover-tip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(33,37,41,0.92);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 1.55;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 10;
+      display: none;
+      font-variant-numeric: tabular-nums;
+    }
+    .exp-hover-tip b { color: #ffd166; font-weight: 600; }
+    .exp-canvas-wrap canvas {
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+    }
+    .exp-toolbar2 {
+      padding: 8px 14px;
+      background: #f8f9fa;
+      border-top: 1px solid #eee;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .exp-toolbar-group { display: flex; gap: 8px; align-items: center; }
+    .exp-toolbar-label { font-size: 12px; color: #555; font-weight: 500; }
+    .exp-cbx {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: #555;
+      cursor: pointer;
+    }
+    .exp-cbx input[type="checkbox"] {
+      width: 14px; height: 14px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .exp-empty { text-align: center; color: #888; padding: 28px 12px; font-size: 13px; }
+    .exp-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 6px 14px;
+      background: #f8f9fa;
+      border-top: 1px solid #eee;
+      font-size: 11px;
+    }
+    .exp-legend-item { display: flex; align-items: center; gap: 5px; }
+    .exp-legend-color { width: 16px; height: 3px; border-radius: 2px; }
+    .exp-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .exp-hidden { display: none !important; }
+    .exp-color-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+    .exp-analysis-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .exp-analysis-table th {
+      background: #f6f8fa;
+      padding: 6px 8px;
+      text-align: left;
+      font-weight: 600;
+      color: #555;
+      font-size: 11px;
+      border-bottom: 1px solid #e1e4e8;
+    }
+    .exp-analysis-table td { padding: 5px 8px; border-bottom: 1px solid #f0f0f0; color: #333; }
+    .exp-analysis-table tr:hover td { background: #f8f9fa; }
+    .exp-err-good { color: #27ae60; font-weight: 600; }
+    .exp-err-mid { color: #f39c12; font-weight: 600; }
+    .exp-err-high { color: #e74c3c; font-weight: 600; }
+
+    @media (max-width: 768px) {
+      .exp-container { flex-direction: column; padding: 12px; }
+      .exp-left { width: 100%; min-width: 0; max-height: 320px; }
+    }
+
+    /* ===== 报告页可编辑字段 + 数据/图同步 ===== */
+    .rep-edit {
+      cursor: text;
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px dashed transparent;
+      transition: all 0.15s;
+      outline: none;
+      display: inline-block;
+      min-width: 40px;
+    }
+    .rep-edit:hover {
+      border-color: var(--primary-light);
+      background: rgba(20,184,166,0.06);
+    }
+    .rep-edit:focus {
+      border-color: var(--primary);
+      border-style: solid;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(13,148,136,0.1);
+    }
+    .rep-edit:empty::before {
+      content: attr(data-placeholder);
+      color: var(--text-secondary);
+      opacity: 0.55;
+    }
+    .report-section-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    .report-section-head h3 { margin: 0 !important; }
+    .btn-tiny {
+      padding: 5px 12px;
+      font-size: 12px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-tiny:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(13,148,136,0.06);
+    }
+    .report-field-img {
+      display: block;
+      width: 100%;
+      max-height: 460px;
+      object-fit: contain;
+      background: var(--bg);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-top: 12px;
+    }
+    .report-field-empty {
+      width: 100%;
+      height: 280px;
+      background: var(--bg);
+      border-radius: 8px;
+      border: 2px dashed var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-top: 12px;
+    }
+    /* 报告页：电场图视图切换 */
+    .rv-tabs {
+      display: flex;
+      gap: 3px;
+      background: #f3f4f6;
+      border-radius: 6px;
+      padding: 3px;
+    }
+    .rv-btn {
+      padding: 5px 12px;
+      font-size: 12px;
+      border: none;
+      background: transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .rv-btn:hover { color: var(--primary); }
+    .rv-btn.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+      font-weight: 500;
     }
   </style>
 </head>
@@ -1269,9 +2134,75 @@
   <!-- Tab 1: Principle -->
   <div id="tab-principle" class="tab-panel active">
     <div class="principle-layout">
-      <div class="principle-left">
-        <p>本实验通过模拟法描绘静电场的等势线和电力线分布。由于直接测量静电场较为困难，我们利用稳恒电流场与静电场的相似性，通过测量导电介质中的电势分布来间接获得静电场的分布。</p>
+      <!-- 实验介绍（顶部） -->
+      <div class="principle-intro">
+        <span class="intro-tag">📖 实验概述</span>
+        <h2 class="intro-title">用稳恒电流场模拟静电场</h2>
+        <p class="intro-lead">
+          静电场难以直接测量——任何探测电荷都会扰动原有场分布。本实验利用<b>稳恒电流场与静电场满足同一拉普拉斯方程</b>这一特性，在均匀导电纸两端施加恒定直流电压形成稳恒电流场，使用电势探针沿等势点扫测得到等势线；再依据<b>电场线 ⊥ 等势线</b>的几何关系，进一步绘出电力线分布。
+        </p>
+        <p class="intro-lead">
+          本工具内置<b>同轴电极</b>与<b>平行电极</b>两种典型几何配置，覆盖二维静电场的两种基本分布模式。系统会将实测数据与理论公式自动比对，输出相对误差和可视化分析报告。
+        </p>
+        <div class="intro-points">
+          <div class="intro-point">
+            <span class="intro-point-icon">🎯</span>
+            <div class="intro-point-text">
+              <b>实验目的</b>
+              <span>掌握模拟法原理，描绘并验证静电场分布</span>
+            </div>
+          </div>
+          <div class="intro-point">
+            <span class="intro-point-icon">🧪</span>
+            <div class="intro-point-text">
+              <b>实验方法</b>
+              <span>电流场模拟 + 等势点扫测 + 数据比对</span>
+            </div>
+          </div>
+          <div class="intro-point">
+            <span class="intro-point-icon">📊</span>
+            <div class="intro-point-text">
+              <b>主要观测</b>
+              <span>等势线、电力线及相对误差分布</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <div class="principle-left">
+        <!-- 核心思想 banner -->
+        <div class="key-banner">
+          <div class="key-banner-icon">💡</div>
+          <div class="key-banner-body">
+            <div class="key-banner-title">模拟法的核心思想</div>
+            <p>静电场难以直接测量——任何探测电荷都会改变原场分布；而稳恒电流场易测、稳定。当两个场满足<b>同样的拉普拉斯方程</b>且<b>边界条件相同</b>时，它们的电势分布<b>形式完全一致</b>。因此<b>测电流场的电势 ⇨ 间接得到静电场的电势</b>。</p>
+          </div>
+        </div>
+
+        <!-- 两种场对应关系 -->
+        <h3 class="principle-h3">两种场的对应关系</h3>
+        <div class="analogy-table-wrap">
+          <table class="analogy-table">
+            <thead>
+              <tr>
+                <th>物理量</th>
+                <th class="col-static">静电场（真空 / 介质）</th>
+                <th class="col-current">稳恒电流场（导电介质）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>电势</td><td><i>V</i></td><td><i>V</i></td></tr>
+              <tr><td>场强</td><td><i>E</i> = −∇<i>V</i></td><td><i>E</i> = −∇<i>V</i></td></tr>
+              <tr><td>通量</td><td>电位移 <i>D</i> = ε<i>E</i></td><td>电流密度 <i>J</i> = σ<i>E</i></td></tr>
+              <tr><td>守恒</td><td>∇·<i>D</i> = ρ（无源处=0）</td><td>∇·<i>J</i> = 0</td></tr>
+              <tr><td>控制方程</td><td>∇²<i>V</i> = 0</td><td>∇²<i>V</i> = 0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="analogy-note">两个场的电势都满足<b>拉普拉斯方程</b>，相同边界条件下解唯一 → 故可用稳恒电流场模拟静电场。</div>
+
+        <!-- 同轴电极公式 + 推导 -->
+        <h3 class="principle-h3">同轴电极电势分布</h3>
         <div class="formula-box">
           <div class="var">V<div class="tooltip">电势函数</div></div>(<div class="var">r<div class="tooltip">到中心的距离</div></div>) =
           <div class="var">V₁<div class="tooltip">内电极电压</div></div> +
@@ -1279,115 +2210,412 @@
           ln(<div class="var">r<div class="tooltip">到中心的距离</div></div>/<div class="var">a<div class="tooltip">内电极半径</div></div>)
           / ln(<div class="var">b<div class="tooltip">外电极半径</div></div>/<div class="var">a<div class="tooltip">内电极半径</div></div>)
         </div>
+        <div class="derive-steps">
+          <div class="derive-item">
+            <span class="derive-tag">1</span>
+            <div>由轴对称性，<i>V</i> 仅是 <i>r</i> 的函数：拉普拉斯方程化为 <code>(1/r)·d/dr(r·dV/dr) = 0</code></div>
+          </div>
+          <div class="derive-item">
+            <span class="derive-tag">2</span>
+            <div>积分两次得通解 <code>V(r) = C₁·ln r + C₂</code></div>
+          </div>
+          <div class="derive-item">
+            <span class="derive-tag">3</span>
+            <div>代入边界 <code>V(a) = V₁</code>、<code>V(b) = V₂</code> 解出 C₁, C₂，即得上式</div>
+          </div>
+        </div>
 
-        <h3 style="font-size:18px;font-weight:600;color:var(--dark);margin-bottom:16px;">关键概念</h3>
+        <!-- 平行电极公式 -->
+        <h3 class="principle-h3">平行电极电势分布</h3>
+        <div class="formula-box">
+          <div class="var">V<div class="tooltip">电势</div></div>(<div class="var">x<div class="tooltip">水平位置</div></div>) =
+          <div class="var">V<sub>L</sub><div class="tooltip">左极板电压</div></div> +
+          (<div class="var">x<div class="tooltip">水平位置</div></div>−<div class="var">x<sub>L</sub><div class="tooltip">左极板位置</div></div>)
+          /(<div class="var">x<sub>R</sub><div class="tooltip">右极板位置</div></div>−<div class="var">x<sub>L</sub></div>)
+          ·(<div class="var">V<sub>R</sub><div class="tooltip">右极板电压</div></div>−<div class="var">V<sub>L</sub></div>)
+        </div>
+        <p class="formula-caption">两板间为<b>均匀电场</b>（忽略边缘效应）；电势沿 <i>x</i> 方向<b>线性变化</b>；等势线是平行于极板的直线，电力线垂直穿过等势线。</p>
+
+        <!-- 关键概念（扩写） -->
+        <h3 class="principle-h3">关键概念</h3>
         <div class="concept-cards">
           <div class="concept-card">
             <div class="concept-icon">⭕</div>
-            <h4>等势线</h4>
-            <p>电势相等的点连成的线，电场线与等势线处处垂直</p>
+            <h4>等势线 / 等势面</h4>
+            <p>电势相等的点连成的曲线（曲面）。沿等势线移动电荷<b>不做功</b>；电场线与等势线<b>处处垂直</b>。</p>
           </div>
           <div class="concept-card">
             <div class="concept-icon">⚡</div>
-            <h4>电力线</h4>
-            <p>描述电场方向的曲线，起始于正电荷终止于负电荷</p>
+            <h4>电力线（电场线）</h4>
+            <p>描述电场方向的曲线，从<b>正电荷（高电势）</b>出发，终止于<b>负电荷（低电势）</b>，<b>密度</b>反映场强大小。</p>
           </div>
           <div class="concept-card">
             <div class="concept-icon">📐</div>
             <h4>电势梯度</h4>
-            <p>电势变化最快的方向，与电场强度方向相反</p>
+            <p>电势变化最快的方向：<b>E = −∇V</b>。场强方向与电势降低方向一致，与等势线法线方向重合。</p>
           </div>
+        </div>
+
+        <!-- 适用条件 -->
+        <div class="condition-card">
+          <div class="condition-title">⚠️ 模拟法的适用条件</div>
+          <ul class="condition-list">
+            <li>导电介质（导电纸）电导率<b>均匀且各向同性</b></li>
+            <li>电极与导电纸<b>接触良好</b>，无明显接触电阻</li>
+            <li>外加<b>恒定直流电压</b>，测量稳态电势分布</li>
+            <li>测量探针输入<b>阻抗远大于</b>介质电阻，避免分流</li>
+            <li>电极几何形状与待研究的静电场<b>一致</b>（如同轴、平行板）</li>
+          </ul>
         </div>
       </div>
       <div class="principle-right">
-        <div class="diagram-box">
-          <h4 style="font-size:15px;font-weight:600;color:var(--dark);margin-bottom:16px;">同轴电极原理示意图</h4>
-          <div class="coaxial-diagram">
-            <div class="coax-outer"></div>
-            <div class="coax-equi" style="width:140px;height:140px;border-color:var(--primary-light);"></div>
-            <div class="coax-equi" style="width:100px;height:100px;border-color:var(--primary);"></div>
-            <div class="coax-equi" style="width:60px;height:60px;border-color:var(--primary-dark);"></div>
-            <div class="coax-inner"></div>
-            <div class="coax-line" style="transform:translate(-50%,-50%) rotate(0deg);"></div>
-            <div class="coax-line" style="transform:translate(-50%,-50%) rotate(45deg);"></div>
-            <div class="coax-line" style="transform:translate(-50%,-50%) rotate(90deg);"></div>
-            <div class="coax-line" style="transform:translate(-50%,-50%) rotate(135deg);"></div>
+        <div class="diagram-card">
+          <div class="diagram-card-head">
+            <h4 id="dc-title">同轴电极原理示意图</h4>
+            <div class="dc-toggle">
+              <button class="dc-tab active" data-shape="coax" onclick="setPrincipleDiagram('coax')">同轴</button>
+              <button class="dc-tab" data-shape="parallel" onclick="setPrincipleDiagram('parallel')">平行</button>
+            </div>
           </div>
-          <div class="legend">
-            <div class="legend-item"><div class="legend-color" style="background:var(--primary-dark);"></div> 内电极（高电势）</div>
-            <div class="legend-item"><div class="legend-color" style="background:#fff;border:2px solid var(--primary);"></div> 外电极（低电势）</div>
-            <div class="legend-item"><div class="legend-color" style="border:2px dashed var(--primary);"></div> 等势线（虚线圆）</div>
-            <div class="legend-item"><div class="legend-color" style="background:var(--accent);"></div> 电力线（带箭头径向线）</div>
+
+          <!-- 同轴电极 -->
+          <div id="dc-coax" class="dc-content">
+            <div class="coax-svg-wrap">
+            <svg viewBox="0 0 320 320" class="coax-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="同轴电极原理示意图">
+              <defs>
+                <radialGradient id="coaxInnerGrad" cx="40%" cy="40%" r="65%">
+                  <stop offset="0%" stop-color="#1F7873"/>
+                  <stop offset="100%" stop-color="#0B3735"/>
+                </radialGradient>
+                <radialGradient id="coaxBgGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="rgba(13,148,136,0.06)"/>
+                  <stop offset="100%" stop-color="rgba(13,148,136,0)"/>
+                </radialGradient>
+                <marker id="coaxArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#F97316"/>
+                </marker>
+                <filter id="coaxShadow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur in="SourceAlpha" stdDeviation="2.5"/>
+                  <feOffset dx="0" dy="2" result="off"/>
+                  <feComponentTransfer><feFuncA type="linear" slope="0.25"/></feComponentTransfer>
+                  <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+
+              <!-- 背景径向晕染 -->
+              <circle cx="160" cy="160" r="148" fill="url(#coaxBgGrad)"/>
+
+              <!-- 等势线（由内向外，颜色由深至浅） -->
+              <g fill="none" stroke-dasharray="5 4" stroke-linecap="round">
+                <circle cx="160" cy="160" r="62" stroke="#0D9488" stroke-width="1.4" opacity="0.85"/>
+                <circle cx="160" cy="160" r="86" stroke="#14B8A6" stroke-width="1.4" opacity="0.85"/>
+                <circle cx="160" cy="160" r="110" stroke="#5EEAD4" stroke-width="1.6" opacity="0.9"/>
+              </g>
+
+              <!-- 外电极环 -->
+              <circle cx="160" cy="160" r="138" fill="none" stroke="#0D9488" stroke-width="3.2"/>
+
+              <!-- 8 条电力线（每 45°，从内电极表面到外电极内壁，带箭头） -->
+              <g stroke="#F97316" stroke-width="1.8" marker-end="url(#coaxArrow)" stroke-linecap="round" fill="none">
+                <line x1="196" y1="160" x2="288" y2="160"/>
+                <line x1="185.46" y1="185.46" x2="250.61" y2="250.61"/>
+                <line x1="160" y1="196" x2="160" y2="288"/>
+                <line x1="134.54" y1="185.46" x2="69.39" y2="250.61"/>
+                <line x1="124" y1="160" x2="32" y2="160"/>
+                <line x1="134.54" y1="134.54" x2="69.39" y2="69.39"/>
+                <line x1="160" y1="124" x2="160" y2="32"/>
+                <line x1="185.46" y1="134.54" x2="250.61" y2="69.39"/>
+              </g>
+
+              <!-- 内电极（带渐变 + 软阴影） -->
+              <circle cx="160" cy="160" r="34" fill="url(#coaxInnerGrad)" stroke="#0a2e2c" stroke-width="1" filter="url(#coaxShadow)"/>
+              <text x="160" y="166" font-size="14" font-weight="700" fill="#fff" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">V₁</text>
+
+              <!-- 外电极电压徽标（顶部 pill） -->
+              <g transform="translate(160 22)">
+                <rect x="-22" y="-12" width="44" height="22" rx="11" fill="#fff" stroke="#0D9488" stroke-width="1.4"/>
+                <text x="0" y="4" font-size="12" font-weight="700" fill="#0D9488" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">V₂</text>
+              </g>
+
+              <!-- 半径标注 a / b （左上扇区 -45°方向，避开 0°/270° 电力线） -->
+              <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-style="italic" font-weight="700">
+                <!-- 半径 a：中心 → 内电极表面，方向 -135° (右上) -->
+                <line x1="160" y1="160" x2="135.95" y2="135.95" stroke="#475569" stroke-width="1" stroke-dasharray="3 2"/>
+                <text x="146" y="155" font-size="13" fill="#1E293B">a</text>
+                <!-- 半径 b：中心 → 外电极，方向 -135° -->
+                <line x1="135.95" y1="135.95" x2="62.43" y2="62.43" stroke="#475569" stroke-width="1" stroke-dasharray="3 2" opacity="0.5"/>
+                <text x="92" y="100" font-size="13" fill="#1E293B">b</text>
+              </g>
+            </svg>
           </div>
+
+            <div class="dc-side">
+              <div class="diagram-legend">
+                <div class="diagram-legend-item">
+                  <span class="dl-mark dl-inner"></span>
+                  <span><b>内电极</b> · 高电势 V₁</span>
+                </div>
+                <div class="diagram-legend-item">
+                  <span class="dl-mark dl-outer"></span>
+                  <span><b>外电极</b> · 低电势 V₂</span>
+                </div>
+                <div class="diagram-legend-item">
+                  <span class="dl-mark dl-equi"></span>
+                  <span><b>等势线</b> · 同心虚线圆</span>
+                </div>
+                <div class="diagram-legend-item">
+                  <span class="dl-mark dl-field"></span>
+                  <span><b>电力线</b> · 径向带箭头</span>
+                </div>
+              </div>
+
+              <div class="diagram-tip">
+                💡 等势线与电力线处处垂直；电力线从高电势指向低电势。
+              </div>
+            </div>
+          </div><!-- /#dc-coax -->
+
+          <!-- 平行电极 -->
+          <div id="dc-parallel" class="dc-content" style="display:none;">
+            <div class="coax-svg-wrap">
+              <svg viewBox="0 0 320 320" class="coax-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="平行电极原理示意图">
+                <defs>
+                  <linearGradient id="plateGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#1F7873"/>
+                    <stop offset="100%" stop-color="#0B3735"/>
+                  </linearGradient>
+                  <linearGradient id="parBg" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="rgba(13,148,136,0.10)"/>
+                    <stop offset="100%" stop-color="rgba(13,148,136,0)"/>
+                  </linearGradient>
+                  <marker id="parArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#F97316"/>
+                  </marker>
+                  <filter id="parShadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+                    <feOffset dx="1" dy="1" result="off"/>
+                    <feComponentTransfer><feFuncA type="linear" slope="0.22"/></feComponentTransfer>
+                    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+
+                <!-- 板间区域底色（提示均匀场） -->
+                <rect x="80" y="60" width="160" height="200" fill="url(#parBg)" rx="2"/>
+
+                <!-- 等势线（4 条垂直直线，dashed） -->
+                <g stroke-dasharray="5 4" stroke-linecap="round" fill="none">
+                  <line x1="112" y1="60" x2="112" y2="260" stroke="#0D9488" stroke-width="1.4" opacity="0.85"/>
+                  <line x1="144" y1="60" x2="144" y2="260" stroke="#14B8A6" stroke-width="1.4" opacity="0.85"/>
+                  <line x1="176" y1="60" x2="176" y2="260" stroke="#2DD4BF" stroke-width="1.4" opacity="0.85"/>
+                  <line x1="208" y1="60" x2="208" y2="260" stroke="#5EEAD4" stroke-width="1.6" opacity="0.9"/>
+                </g>
+
+                <!-- 5 条横向电力线（带箭头，从左极板内壁指向右极板内壁） -->
+                <g stroke="#F97316" stroke-width="1.8" marker-end="url(#parArrow)" stroke-linecap="round" fill="none">
+                  <line x1="86" y1="90"  x2="228" y2="90"/>
+                  <line x1="86" y1="130" x2="228" y2="130"/>
+                  <line x1="86" y1="160" x2="228" y2="160"/>
+                  <line x1="86" y1="190" x2="228" y2="190"/>
+                  <line x1="86" y1="230" x2="228" y2="230"/>
+                </g>
+
+                <!-- 左极板（高电势） -->
+                <rect x="76" y="50" width="8" height="220" rx="2" fill="url(#plateGrad)" stroke="#0a2e2c" stroke-width="0.8" filter="url(#parShadow)"/>
+                <!-- 右极板（低电势） -->
+                <rect x="236" y="50" width="8" height="220" rx="2" fill="url(#plateGrad)" stroke="#0a2e2c" stroke-width="0.8" filter="url(#parShadow)"/>
+
+                <!-- 电压徽标 V_L / V_R -->
+                <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+                  <g transform="translate(80 30)">
+                    <rect x="-22" y="-12" width="44" height="22" rx="11" fill="#fff" stroke="#0D9488" stroke-width="1.4"/>
+                    <text x="0" y="4" font-size="12" font-weight="700" fill="#0D9488" text-anchor="middle">V<tspan font-size="9" baseline-shift="-30%">L</tspan></text>
+                  </g>
+                  <g transform="translate(240 30)">
+                    <rect x="-22" y="-12" width="44" height="22" rx="11" fill="#fff" stroke="#0D9488" stroke-width="1.4"/>
+                    <text x="0" y="4" font-size="12" font-weight="700" fill="#0D9488" text-anchor="middle">V<tspan font-size="9" baseline-shift="-30%">R</tspan></text>
+                  </g>
+                </g>
+
+                <!-- 板间距标注 d -->
+                <g stroke="#475569" stroke-width="1" stroke-dasharray="3 2" fill="none">
+                  <line x1="84" y1="288" x2="236" y2="288"/>
+                  <line x1="84" y1="282" x2="84" y2="294"/>
+                  <line x1="236" y1="282" x2="236" y2="294"/>
+                </g>
+                <text x="160" y="304" font-size="13" font-style="italic" font-weight="700" fill="#1E293B" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">d</text>
+              </svg>
+            </div>
+
+            <div class="dc-side">
+              <div class="diagram-legend">
+                <div class="diagram-legend-item">
+                  <span class="dl-mark dl-plate"></span>
+                  <span><b>左极板</b> · 高电势 V<sub>L</sub></span>
+                </div>
+                <div class="diagram-legend-item">
+                  <span class="dl-mark dl-plate"></span>
+                  <span><b>右极板</b> · 低电势 V<sub>R</sub></span>
+                </div>
+                <div class="diagram-legend-item">
+                  <span class="dl-mark dl-equi"></span>
+                  <span><b>等势线</b> · 平行直线</span>
+                </div>
+                <div class="diagram-legend-item">
+                  <span class="dl-mark dl-field"></span>
+                  <span><b>电力线</b> · 横穿带箭头</span>
+                </div>
+              </div>
+
+              <div class="diagram-tip">
+                💡 板间为均匀电场，电势沿 <i>x</i> 线性变化；忽略边缘效应。
+              </div>
+            </div>
+          </div><!-- /#dc-parallel -->
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Tab 2: Experiment -->
+  <!-- Tab 2: Experiment（内联静电场模拟工具，作用域：.exp-embed） -->
   <div id="tab-experiment" class="tab-panel">
-    <div class="exp-layout">
-      <div class="exp-sidebar">
-        <div>
-          <h3>电极参数</h3>
-          <div style="margin-bottom:12px;">
-            <label style="font-size:13px;color:var(--text-secondary);display:block;margin-bottom:6px;">实验模式</label>
-            <select id="expMode" onchange="drawCanvas()">
-              <option value="coaxial">同轴电极</option>
-              <option value="parallel">平行电极</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>内电极电压 V₁ (V)</label>
-            <input type="number" id="v1" value="10" onchange="drawCanvas()">
-          </div>
-          <div class="form-group">
-            <label>外电极电压 V₂ (V)</label>
-            <input type="number" id="v2" value="0" onchange="drawCanvas()">
-          </div>
-          <div class="form-group">
-            <label>内电极半径 a (mm)</label>
-            <input type="number" id="ra" value="10" onchange="drawCanvas()">
-          </div>
-          <div class="form-group">
-            <label>外电极半径 b (mm)</label>
-            <input type="number" id="rb" value="50" onchange="drawCanvas()">
-          </div>
-        </div>
-
-        <div>
-          <h3>等势线数据</h3>
-          <div class="data-list">
-            <div class="data-item"><span>2V 等势线</span><span>r = 42.3 mm</span></div>
-            <div class="data-item"><span>4V 等势线</span><span>r = 28.6 mm</span></div>
-            <div class="data-item"><span>6V 等势线</span><span>r = 18.9 mm</span></div>
-            <div class="data-item"><span>8V 等势线</span><span>r = 11.2 mm</span></div>
-          </div>
-        </div>
-
-        <div class="sidebar-actions">
-          <button class="btn btn-secondary" style="flex:1;" onclick="showToast('实验数据已自动保存 💾','success')">💾 保存实验</button>
-          <button class="btn btn-primary" style="flex:1;" onclick="showToast('电场图生成成功！','success');drawCanvas();updateProgress(35);">⚡ 生成电场图</button>
-        </div>
+    <div class="exp-embed">
+      <div class="exp-tabs">
+        <div class="exp-tab active" data-mode="coaxial">同轴电极</div>
+        <div class="exp-tab" data-mode="parallel">平行电极</div>
       </div>
 
-      <div class="exp-main">
-        <div class="exp-toolbar">
-          <span class="toolbar-label">显示选项</span>
-          <div class="checkbox-group">
-            <label><input type="checkbox" checked onchange="drawCanvas()"> 网格</label>
-            <label><input type="checkbox"> 坐标轴</label>
-            <label><input type="checkbox" checked onchange="drawCanvas()"> 等势线</label>
-            <label><input type="checkbox" onchange="drawCanvas()"> 电力线</label>
-            <label><input type="checkbox"> 测量点</label>
+      <div class="exp-container">
+        <!-- 左侧：数据输入 -->
+        <div class="exp-left panel">
+          <!-- 同轴电极参数 -->
+          <div id="coaxial-params" class="exp-section">
+            <div class="exp-section-header"><span>📐 电极参数</span></div>
+            <div class="exp-section-body">
+              <div class="exp-form-row">
+                <div class="exp-form-group">
+                  <label>圆心 X (mm)</label>
+                  <input type="number" id="cx-center" value="0" step="0.1">
+                </div>
+                <div class="exp-form-group">
+                  <label>圆心 Y (mm)</label>
+                  <input type="number" id="cy-center" value="0" step="0.1">
+                </div>
+              </div>
+              <div class="exp-form-row">
+                <div class="exp-form-group">
+                  <label>内电极半径 (mm)</label>
+                  <input type="number" id="r-inner" value="10" step="0.1" min="0.1">
+                </div>
+                <div class="exp-form-group">
+                  <label>外电极半径 (mm)</label>
+                  <input type="number" id="r-outer" value="50" step="0.1" min="0.1">
+                </div>
+              </div>
+              <div class="exp-form-row">
+                <div class="exp-form-group">
+                  <label>内电极电压 (V)</label>
+                  <input type="number" id="v-inner" value="10" step="0.1">
+                </div>
+                <div class="exp-form-group">
+                  <label>外电极电压 (V)</label>
+                  <input type="number" id="v-outer" value="0" step="0.1">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 平行电极参数 -->
+          <div id="parallel-params" class="exp-section exp-hidden">
+            <div class="exp-section-header"><span>📐 电极参数</span></div>
+            <div class="exp-section-body">
+              <div class="exp-form-row">
+                <div class="exp-form-group">
+                  <label>左极板 X (mm)</label>
+                  <input type="number" id="px-left" value="-40" step="0.1">
+                </div>
+                <div class="exp-form-group">
+                  <label>右极板 X (mm)</label>
+                  <input type="number" id="px-right" value="40" step="0.1">
+                </div>
+              </div>
+              <div class="exp-form-row">
+                <div class="exp-form-group">
+                  <label>极板 Y 起点 (mm)</label>
+                  <input type="number" id="py-start" value="-60" step="0.1">
+                </div>
+                <div class="exp-form-group">
+                  <label>极板 Y 终点 (mm)</label>
+                  <input type="number" id="py-end" value="60" step="0.1">
+                </div>
+              </div>
+              <div class="exp-form-row">
+                <div class="exp-form-group">
+                  <label>左极板电压 (V)</label>
+                  <input type="number" id="pv-left" value="10" step="0.1">
+                </div>
+                <div class="exp-form-group">
+                  <label>右极板电压 (V)</label>
+                  <input type="number" id="pv-right" value="0" step="0.1">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 等势线测量数据 -->
+          <div class="exp-section">
+            <div class="exp-section-header">
+              <span>📊 等势线测量数据</span>
+              <button class="exp-btn-small exp-btn-add" onclick="ExpField.addEquipotential()">+ 添加等势线</button>
+            </div>
+            <div class="exp-section-body" id="equipotentials-container"></div>
+          </div>
+
+          <!-- 数据分析 -->
+          <div class="exp-section" id="analysis-section">
+            <div class="exp-section-header"><span>📈 数据分析</span></div>
+            <div class="exp-section-body" id="analysis-container">
+              <div class="exp-empty">点击"生成电场图"按钮后，此处将显示理论值与实测值的对比分析</div>
+            </div>
+          </div>
+
+          <div class="exp-section" style="padding:12px; border-bottom:none;">
+            <button class="exp-btn exp-btn-primary" onclick="ExpField.generatePlot()" style="width:100%; justify-content:center;">
+              🎨 生成电场图
+            </button>
           </div>
         </div>
-        <div class="canvas-wrap">
-          <canvas id="expCanvas" width="600" height="480"></canvas>
-          <div class="canvas-tools">
-            <div class="canvas-tool-btn" title="放大" onclick="showToast('缩放功能开发中','warning')">🔍+</div>
-            <div class="canvas-tool-btn" title="缩小" onclick="showToast('缩放功能开发中','warning')">🔍-</div>
-            <div class="canvas-tool-btn" title="重置" onclick="drawCanvas();showToast('画布已重置','success')">↺</div>
+
+        <!-- 右侧：画布 -->
+        <div class="exp-right panel">
+          <div class="exp-canvas-wrap">
+            <canvas id="fieldCanvas" width="1400" height="1100"></canvas>
+            <div class="exp-hover-tip" id="exp-hover-tip"></div>
+          </div>
+          <div class="exp-legend" id="legend-container">
+            <div class="exp-legend-item"><div class="exp-legend-color" style="background:#2c3e50; height:2px;"></div><span>等势线（理论）</span></div>
+            <div class="exp-legend-item"><div class="exp-legend-color" style="background:#e74c3c; height:2px;"></div><span>电力线（理论）</span></div>
+            <div class="exp-legend-item"><div class="exp-legend-dot" style="background:#3498db; border:1px solid #2980b9;"></div><span>测量点</span></div>
+          </div>
+          <div class="exp-toolbar2">
+            <div class="exp-toolbar-group">
+              <span class="exp-toolbar-label">显示选项:</span>
+              <label class="exp-cbx"><input type="checkbox" id="show-grid" checked onchange="ExpField.generatePlot()"><span>网格</span></label>
+              <label class="exp-cbx"><input type="checkbox" id="show-axis" checked onchange="ExpField.generatePlot()"><span>坐标轴</span></label>
+              <label class="exp-cbx"><input type="checkbox" id="show-equipotential" checked onchange="ExpField.generatePlot()"><span>等势线</span></label>
+              <label class="exp-cbx"><input type="checkbox" id="show-fieldline" checked onchange="ExpField.generatePlot()"><span>电力线</span></label>
+              <label class="exp-cbx"><input type="checkbox" id="show-points" checked onchange="ExpField.generatePlot()"><span>测量点</span></label>
+            </div>
+            <div style="flex:1;"></div>
+            <div class="exp-toolbar-group" id="parallel-toggle-group" style="display:none;">
+              <button class="exp-btn exp-btn-primary" id="btn-toggle-view" onclick="ExpField.toggleParallelView()">
+                📐 正负电极电场分布图
+              </button>
+            </div>
+            <div class="exp-toolbar-group">
+              <button class="exp-btn exp-btn-success" onclick="ExpField.downloadImage()">
+                💾 下载图片
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -1396,84 +2624,57 @@
 
   <!-- Tab 3: Analysis -->
   <div id="tab-analysis" class="tab-panel">
+    <div class="analysis-toolbar">
+      <span class="analysis-mode-tag" id="analysis-mode-tag">同轴电极</span>
+      <div style="flex:1;"></div>
+      <button class="btn-tiny" onclick="renderAnalysisDashboard()" title="从实验同步最新数据">🔄 从实验同步</button>
+    </div>
+
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-value green">2.3%</div>
+        <div class="stat-value green" id="stat-avg">—</div>
         <div class="stat-label">平均相对误差</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value yellow">8.7%</div>
+        <div class="stat-value yellow" id="stat-max">—</div>
         <div class="stat-label">最大误差</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value blue">24</div>
+        <div class="stat-value blue" id="stat-points">—</div>
         <div class="stat-label">测量点总数</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value purple">4</div>
+        <div class="stat-value purple" id="stat-eqs">—</div>
         <div class="stat-label">等势线数</div>
       </div>
     </div>
 
     <div class="charts-row">
       <div class="chart-box">
-        <h4>各等势线相对误差分布</h4>
-        <div class="bar-chart">
-          <div class="bar-item">
-            <div class="bar" style="height:30%;background:var(--success);"></div>
-            <span class="bar-label">4V</span>
-          </div>
-          <div class="bar-item">
-            <div class="bar" style="height:45%;background:var(--primary);"></div>
-            <span class="bar-label">6V</span>
-          </div>
-          <div class="bar-item">
-            <div class="bar" style="height:22%;background:var(--primary-light);"></div>
-            <span class="bar-label">8V</span>
-          </div>
-          <div class="bar-item">
-            <div class="bar" style="height:65%;background:var(--warning);"></div>
-            <span class="bar-label">10V</span>
-          </div>
+        <div class="chart-head">
+          <h4>各等势线相对误差分布</h4>
         </div>
+        <div class="bar-chart" id="bar-chart"></div>
       </div>
       <div class="chart-box">
-        <h4>理论值 vs 实测值对比</h4>
+        <div class="chart-head">
+          <h4 id="line-chart-title">理论值 vs 实测值对比</h4>
+        </div>
         <div class="line-chart">
-          <svg viewBox="0 0 300 140" preserveAspectRatio="none">
-            <line x1="20" y1="120" x2="280" y2="120" stroke="#E5E7EB" stroke-width="1"/>
-            <line x1="20" y1="10" x2="20" y2="120" stroke="#E5E7EB" stroke-width="1"/>
-            <polyline points="20,110 90,85 160,60 230,35" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-dasharray="5,5"/>
-            <polyline points="20,112 90,88 160,62 230,40" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
-            <circle cx="20" cy="110" r="3" fill="var(--primary)"/>
-            <circle cx="90" cy="85" r="3" fill="var(--primary)"/>
-            <circle cx="160" cy="60" r="3" fill="var(--primary)"/>
-            <circle cx="230" cy="35" r="3" fill="var(--primary)"/>
-            <circle cx="20" cy="112" r="3" fill="var(--accent)"/>
-            <circle cx="90" cy="88" r="3" fill="var(--accent)"/>
-            <circle cx="160" cy="62" r="3" fill="var(--accent)"/>
-            <circle cx="230" cy="40" r="3" fill="var(--accent)"/>
-            <text x="250" y="30" font-size="10" fill="var(--primary)">理论</text>
-            <text x="250" y="45" font-size="10" fill="var(--accent)">实测</text>
-          </svg>
+          <svg id="cmp-svg" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
       </div>
     </div>
 
     <div class="data-table-wrap">
-      <h4>详细测量数据</h4>
-      <table class="data-table">
-        <thead>
-          <tr><th>测量点</th><th>理论电压(V)</th><th>实测电压(V)</th><th>绝对误差(V)</th><th>相对误差(%)</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>P1</td><td>2.0</td><td>2.05</td><td>0.05</td><td>2.5</td></tr>
-          <tr><td>P2</td><td>4.0</td><td>4.12</td><td>0.12</td><td>3.0</td></tr>
-          <tr><td>P3</td><td>6.0</td><td>6.08</td><td>0.08</td><td>1.3</td></tr>
-          <tr><td>P4</td><td>8.0</td><td>7.95</td><td>0.05</td><td>0.6</td></tr>
-          <tr><td>P5</td><td>10.0</td><td>9.13</td><td>0.87</td><td>8.7</td></tr>
-        </tbody>
-      </table>
+      <h4>详细测量数据 <span class="detail-count" id="detail-count"></span></h4>
+      <div class="data-table-scroll" id="detail-scroll">
+        <table class="data-table">
+          <thead id="detail-thead"></thead>
+          <tbody id="detail-tbody"></tbody>
+        </table>
+      </div>
+      <div class="analysis-empty" id="detail-empty" style="display:none;">暂无测量数据，请先在「实验」标签页添加测量点</div>
     </div>
   </div>
 
@@ -1487,9 +2688,9 @@
     <div class="paper">
       <h2>静电场模拟描绘实验报告</h2>
       <div class="paper-info">
-        <div class="paper-info-item"><strong>姓名：</strong> 张三</div>
-        <div class="paper-info-item"><strong>学号：</strong> 2024001001</div>
-        <div class="paper-info-item"><strong>日期：</strong> 2024年04月15日</div>
+        <div class="paper-info-item"><strong>姓名：</strong> <span class="rep-edit" data-rk="name" data-placeholder="点击填写" contenteditable="true">张三</span></div>
+        <div class="paper-info-item"><strong>学号：</strong> <span class="rep-edit" data-rk="sid" data-placeholder="点击填写" contenteditable="true">2024001001</span></div>
+        <div class="paper-info-item"><strong>日期：</strong> <span class="rep-edit" data-rk="date" data-placeholder="点击填写" contenteditable="true">2024年04月15日</span></div>
       </div>
 
       <h3>1. 实验目的</h3>
@@ -1499,12 +2700,15 @@
       <p>本实验采用稳恒电流场模拟静电场。在均匀导电介质中，稳恒电流场的电势分布与真空中的静电场具有相同的数学形式。通过测量导电纸上的电势分布，即可得到相应的静电场分布。</p>
       <p>同轴圆柱形电极间的电势分布公式为：V(r) = V₁ + (V₂−V₁)·ln(r/a)/ln(b/a)</p>
 
-      <h3>3. 数据记录</h3>
-      <table class="data-table" style="margin:16px 0;">
-        <thead>
+      <div class="report-section-head">
+        <h3>3. 数据记录</h3>
+        <button class="btn-tiny" onclick="syncReportFromExperiment()" title="从「实验」标签页的数据分析表导入">🔄 从实验同步</button>
+      </div>
+      <table class="data-table" id="report-data-table" style="margin:16px 0;">
+        <thead id="report-data-thead">
           <tr><th>等势线</th><th>理论半径(mm)</th><th>实测半径(mm)</th><th>相对误差</th></tr>
         </thead>
-        <tbody>
+        <tbody id="report-data-tbody">
           <tr><td>2V</td><td>42.3</td><td>43.1</td><td>1.9%</td></tr>
           <tr><td>4V</td><td>28.6</td><td>29.5</td><td>3.1%</td></tr>
           <tr><td>6V</td><td>18.9</td><td>19.2</td><td>1.6%</td></tr>
@@ -1512,9 +2716,22 @@
         </tbody>
       </table>
 
-      <h3>4. 结果分析</h3>
+      <div class="report-section-head">
+        <h3>4. 结果分析</h3>
+        <div class="rv-tabs" id="report-view-tabs" style="display:none;">
+          <button class="rv-btn" data-view="coaxial" onclick="setReportViewMode('coaxial')">同轴电极</button>
+          <button class="rv-btn" data-view="parallel" onclick="setReportViewMode('parallel')">平行电极</button>
+          <button class="rv-btn" data-view="parallelRef" onclick="setReportViewMode('parallelRef')">正负电极参考</button>
+        </div>
+        <button class="btn-tiny" onclick="syncReportFieldImage()" title="从「实验」标签页导入当前电场图">🔄 从实验同步</button>
+      </div>
       <p>实验测得的等势线分布与理论预测基本一致，呈现出以中心电极为圆心的同心圆分布。测量结果的平均相对误差为2.3%，主要误差来源包括电极接触不良、导电纸不均匀以及测量读数误差。</p>
-      <div class="placeholder-img">📊 等势线分布图</div>
+      <img id="report-field-img" class="report-field-img" alt="等势线分布图" style="display:none;">
+      <div id="report-field-placeholder" class="report-field-empty">
+        <div style="font-size:32px;">📊</div>
+        <div>等势线分布图</div>
+        <div style="font-size:12px;opacity:0.7;">点击右上「🔄 从实验同步」导入电场图，可切换三种视图</div>
+      </div>
 
       <h3>5. 结论</h3>
       <p>通过本次实验，成功验证了同轴电极间静电场的分布规律，等势线为同心圆，电力线为径向直线。模拟法是一种有效的静电场研究方法，测量结果与理论计算吻合良好。</p>
@@ -1613,7 +2830,335 @@ function switchTab(name) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   event.target.classList.add('active');
   document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'analysis') {
+    renderAnalysisDashboard(true);
+  }
+  if (name === 'report') {
+    // 切到报告页时自动同步实验数据/电场图
+    syncReportFromExperiment(true);
+    syncReportFieldImage(true);
+  }
 }
+
+/* ===== 原理页：同轴/平行示意图切换 ===== */
+function setPrincipleDiagram(shape) {
+  document.querySelectorAll('.dc-tab').forEach(b => {
+    b.classList.toggle('active', b.dataset.shape === shape);
+  });
+  const coax = document.getElementById('dc-coax');
+  const par = document.getElementById('dc-parallel');
+  const title = document.getElementById('dc-title');
+  if (coax) coax.style.display = shape === 'coax' ? 'block' : 'none';
+  if (par) par.style.display = shape === 'parallel' ? 'block' : 'none';
+  if (title) title.textContent = shape === 'coax' ? '同轴电极原理示意图' : '平行电极原理示意图';
+}
+
+/* ===== 数据分析 dashboard：从实验当前数据动态渲染 ===== */
+function renderAnalysisDashboard(silent) {
+  if (!window.ExpField || !ExpField.getAnalysisData) {
+    if (!silent) showToast('实验工具尚未加载','warning');
+    return;
+  }
+  const d = ExpField.getAnalysisData();
+  const isCoax = d.mode === 'coaxial';
+
+  // 模式标签
+  const tag = document.getElementById('analysis-mode-tag');
+  if (tag) tag.textContent = isCoax ? '同轴电极' : '平行电极';
+
+  // 折线图标题
+  const lineTitle = document.getElementById('line-chart-title');
+  if (lineTitle) lineTitle.textContent = isCoax
+    ? '理论半径 vs 实测半径（按电压）'
+    : '理论 X vs 实测 X（按电压）';
+
+  // ====== 1. 统计卡片 ======
+  const fmt = (v, unit='%') => v == null ? '—' : (v.toFixed(1) + unit);
+  const colorOf = err => err == null ? 'blue' : (err < 3 ? 'green' : err < 8 ? 'yellow' : 'red');
+  const setStat = (id, value, cls) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = value;
+    if (cls) {
+      el.classList.remove('green','yellow','blue','purple','red','orange');
+      el.classList.add(cls);
+    }
+  };
+  setStat('stat-avg', fmt(d.stats.avgError), colorOf(d.stats.avgError));
+  setStat('stat-max', fmt(d.stats.maxError), colorOf(d.stats.maxError));
+  setStat('stat-points', d.stats.pointCount === 0 ? '—' : String(d.stats.pointCount), 'blue');
+  setStat('stat-eqs', d.stats.equipotentialCount === 0 ? '—' : String(d.stats.equipotentialCount), 'purple');
+
+  // ====== 2. 柱状图：各等势线相对误差 ======
+  renderBarChart_(d.items);
+
+  // ====== 3. 折线图：理论 vs 实测 ======
+  renderLineChart_(d.items, isCoax);
+
+  // ====== 4. 详细测量数据表 ======
+  renderDetailTable_(d.detailed, isCoax);
+
+  if (!silent) showToast('数据分析已同步','success');
+}
+
+function renderBarChart_(items) {
+  const wrap = document.getElementById('bar-chart');
+  if (!wrap) return;
+  if (items.length === 0) {
+    wrap.innerHTML = '<div class="chart-empty">暂无测量数据</div>';
+    return;
+  }
+  const errs = items.map(it => it.relErr);
+  const yMax = Math.max(Math.max(...errs) * 1.25, 1);
+  wrap.innerHTML = items.map(it => {
+    const pct = Math.max((it.relErr / yMax) * 100, 2);
+    const color = it.relErr < 3 ? 'var(--success)' :
+                  it.relErr < 5 ? 'var(--primary)' :
+                  it.relErr < 8 ? 'var(--warning)' : 'var(--error)';
+    return `
+      <div class="bar-item" title="${it.voltage}V 等势线\n相对误差: ${it.relErr.toFixed(2)}%">
+        <span class="bar-value">${it.relErr.toFixed(1)}%</span>
+        <div class="bar" style="height:${pct}%;background:${color};"></div>
+        <span class="bar-label">${it.voltage}V</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderLineChart_(items, isCoax) {
+  const svg = document.getElementById('cmp-svg');
+  if (!svg) return;
+  if (items.length === 0) {
+    svg.innerHTML = '<text x="200" y="110" font-size="12" fill="#9CA3AF" text-anchor="middle">暂无测量数据</text>';
+    return;
+  }
+
+  const W = 400, H = 220;
+  const PAD = { left: 46, right: 24, top: 28, bottom: 38 };
+  const innerW = W - PAD.left - PAD.right;
+  const innerH = H - PAD.top - PAD.bottom;
+
+  // Y 轴范围
+  const allY = items.flatMap(it => [it.theory, it.measured]);
+  let yLo = Math.min(...allY);
+  let yHi = Math.max(...allY);
+  if (yLo === yHi) { yLo -= 1; yHi += 1; }
+  const margin = (yHi - yLo) * 0.15;
+  yLo -= margin; yHi += margin;
+
+  const xPos = i => PAD.left + (items.length === 1 ? innerW / 2 : i * innerW / (items.length - 1));
+  const yPos = v => PAD.top + (1 - (v - yLo) / (yHi - yLo)) * innerH;
+
+  // 网格 + Y 刻度
+  let parts = [];
+  const yTicks = 5;
+  for (let i = 0; i <= yTicks; i++) {
+    const v = yLo + (yHi - yLo) * (i / yTicks);
+    const y = yPos(v);
+    parts.push(`<line x1="${PAD.left}" y1="${y}" x2="${W - PAD.right}" y2="${y}" stroke="#F3F4F6" stroke-width="1"/>`);
+    parts.push(`<text x="${PAD.left - 8}" y="${y + 3}" font-size="9" fill="#9CA3AF" text-anchor="end" font-family="sans-serif">${v.toFixed(1)}</text>`);
+  }
+
+  // 坐标轴
+  parts.push(`<line x1="${PAD.left}" y1="${PAD.top}" x2="${PAD.left}" y2="${H - PAD.bottom}" stroke="#D1D5DB"/>`);
+  parts.push(`<line x1="${PAD.left}" y1="${H - PAD.bottom}" x2="${W - PAD.right}" y2="${H - PAD.bottom}" stroke="#D1D5DB"/>`);
+
+  // X 轴标签
+  items.forEach((it, i) => {
+    const x = xPos(i);
+    parts.push(`<text x="${x}" y="${H - PAD.bottom + 16}" font-size="10" fill="#6B7280" text-anchor="middle" font-family="sans-serif">${it.voltage}V</text>`);
+  });
+
+  // 误差填充区域
+  if (items.length > 1) {
+    const top = items.map((it, i) => `${xPos(i).toFixed(1)},${yPos(Math.max(it.theory, it.measured)).toFixed(1)}`).join(' ');
+    const bot = items.slice().reverse().map((it, i) => {
+      const idx = items.length - 1 - i;
+      return `${xPos(idx).toFixed(1)},${yPos(Math.min(items[idx].theory, items[idx].measured)).toFixed(1)}`;
+    }).join(' ');
+    parts.push(`<polygon points="${top} ${bot}" fill="rgba(249,115,22,0.10)"/>`);
+  }
+
+  // 折线
+  const theoryPath = items.map((it, i) => `${xPos(i).toFixed(1)},${yPos(it.theory).toFixed(1)}`).join(' ');
+  const measuredPath = items.map((it, i) => `${xPos(i).toFixed(1)},${yPos(it.measured).toFixed(1)}`).join(' ');
+  parts.push(`<polyline points="${theoryPath}" fill="none" stroke="#0D9488" stroke-width="2" stroke-dasharray="6,4" stroke-linejoin="round"/>`);
+  parts.push(`<polyline points="${measuredPath}" fill="none" stroke="#F97316" stroke-width="2.5" stroke-linejoin="round"/>`);
+
+  // 数据点
+  const unit = isCoax ? 'mm 半径' : 'mm (X)';
+  items.forEach((it, i) => {
+    const x = xPos(i);
+    const yt = yPos(it.theory);
+    const ym = yPos(it.measured);
+    parts.push(`<circle cx="${x.toFixed(1)}" cy="${yt.toFixed(1)}" r="3.5" fill="#fff" stroke="#0D9488" stroke-width="2"><title>${it.voltage}V · 理论 ${it.theory.toFixed(2)} ${unit}</title></circle>`);
+    parts.push(`<circle cx="${x.toFixed(1)}" cy="${ym.toFixed(1)}" r="3.5" fill="#F97316"><title>${it.voltage}V · 实测 ${it.measured.toFixed(2)} ${unit}（误差 ${it.relErr.toFixed(1)}%）</title></circle>`);
+  });
+
+  // Y 轴单位标签
+  const yLabel = isCoax ? '半径 (mm)' : 'X 坐标 (mm)';
+  parts.push(`<text x="14" y="${H/2}" font-size="10" fill="#6B7280" text-anchor="middle" font-family="sans-serif" transform="rotate(-90 14 ${H/2})">${yLabel}</text>`);
+  parts.push(`<text x="${(PAD.left + W - PAD.right)/2}" y="${H - 6}" font-size="10" fill="#6B7280" text-anchor="middle" font-family="sans-serif">等势线电压</text>`);
+
+  // 图例
+  const lgX = W - PAD.right - 110;
+  const lgY = PAD.top - 14;
+  parts.push(`<g font-family="sans-serif">
+    <line x1="${lgX}" y1="${lgY}" x2="${lgX + 20}" y2="${lgY}" stroke="#0D9488" stroke-width="2" stroke-dasharray="5,3"/>
+    <circle cx="${lgX + 10}" cy="${lgY}" r="3" fill="#fff" stroke="#0D9488" stroke-width="1.5"/>
+    <text x="${lgX + 26}" y="${lgY + 3}" font-size="10" fill="#6B7280">理论</text>
+    <line x1="${lgX + 56}" y1="${lgY}" x2="${lgX + 76}" y2="${lgY}" stroke="#F97316" stroke-width="2.5"/>
+    <circle cx="${lgX + 66}" cy="${lgY}" r="3" fill="#F97316"/>
+    <text x="${lgX + 82}" y="${lgY + 3}" font-size="10" fill="#6B7280">实测</text>
+  </g>`);
+
+  svg.innerHTML = parts.join('');
+}
+
+function renderDetailTable_(detailed, isCoax) {
+  const thead = document.getElementById('detail-thead');
+  const tbody = document.getElementById('detail-tbody');
+  const empty = document.getElementById('detail-empty');
+  const count = document.getElementById('detail-count');
+  const scroll = document.getElementById('detail-scroll');
+  if (!thead || !tbody) return;
+
+  if (detailed.length === 0) {
+    thead.innerHTML = '';
+    tbody.innerHTML = '';
+    if (count) count.textContent = '';
+    if (scroll) scroll.style.display = 'none';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  if (scroll) {
+    scroll.style.display = 'block';
+    scroll.scrollTop = 0;
+  }
+  if (count) count.textContent = `（共 ${detailed.length} 条${detailed.length > 10 ? '，滚动查看更多' : ''}）`;
+
+  const valCol = isCoax ? '半径(mm)' : 'X(mm)';
+  thead.innerHTML = `<tr>
+    <th>测量点</th>
+    <th>等势线(V)</th>
+    <th>理论${valCol}</th>
+    <th>实测${valCol}</th>
+    <th>绝对误差(mm)</th>
+    <th>相对误差(%)</th>
+  </tr>`;
+  tbody.innerHTML = detailed.map(p => {
+    const errStyle = p.relErr < 3 ? 'color:#16a34a;font-weight:600;' :
+                     p.relErr < 8 ? 'color:#ea580c;font-weight:600;' :
+                                    'color:#dc2626;font-weight:600;';
+    return `<tr>
+      <td>${p.id}</td>
+      <td>${p.voltage.toFixed(1)}</td>
+      <td>${p.theory.toFixed(2)}</td>
+      <td>${p.measured.toFixed(2)}</td>
+      <td>${p.absErr.toFixed(2)}</td>
+      <td style="${errStyle}">${p.relErr.toFixed(1)}</td>
+    </tr>`;
+  }).join('');
+}
+
+/* ===== 报告页：从实验同步数据表 ===== */
+function syncReportFromExperiment(silent) {
+  if (!window.ExpField || !ExpField.getAnalysisRows) {
+    if (!silent) showToast('实验工具尚未加载','warning');
+    return;
+  }
+  const data = ExpField.getAnalysisRows();
+  if (!data || !data.rows.length) {
+    if (!silent) showToast('实验里暂无可同步的测量数据','warning');
+    return;
+  }
+  // 表头：第 1 列保留为「等势线」，其余沿用实验分析表表头
+  const thead = document.getElementById('report-data-thead');
+  const tbody = document.getElementById('report-data-tbody');
+  if (!thead || !tbody) return;
+  const headerCells = ['等势线', ...data.headers.slice(1)];
+  thead.innerHTML = '<tr>' + headerCells.map(h => `<th>${h}</th>`).join('') + '</tr>';
+  // 行：第一列把电压渲染成「xV 等势线」，相对误差列保留色彩等级
+  tbody.innerHTML = data.rows.map(cells => {
+    const v = cells[0] ? cells[0].text : '';
+    const tds = [`<td>${v}V</td>`];
+    for (let i = 1; i < cells.length; i++) {
+      const c = cells[i];
+      const cls = c.cls === 'exp-err-good' ? 'style="color:#16a34a;font-weight:600;"' :
+                  c.cls === 'exp-err-mid'  ? 'style="color:#ea580c;font-weight:600;"' :
+                  c.cls === 'exp-err-high' ? 'style="color:#dc2626;font-weight:600;"' : '';
+      tds.push(`<td ${cls}>${c.text}</td>`);
+    }
+    return '<tr>' + tds.join('') + '</tr>';
+  }).join('');
+  if (!silent) showToast('已从实验数据分析同步 ' + data.rows.length + ' 条记录','success');
+}
+
+/* ===== 报告页：从实验同步电场图（三种视图快照） ===== */
+let _reportSnaps = null;     // { coaxial, parallel, parallelRef }
+let _reportCurrentView = null;
+
+function syncReportFieldImage(silent) {
+  if (!window.ExpField || !ExpField.getCanvasSnapshots) {
+    if (!silent) showToast('实验工具尚未加载','warning');
+    return;
+  }
+  const result = ExpField.getCanvasSnapshots();
+  if (!result || !result.snaps || !result.snaps.coaxial) {
+    if (!silent) showToast('无法获取电场图','error');
+    return;
+  }
+  _reportSnaps = result.snaps;
+  // 显示视图切换组
+  const tabs = document.getElementById('report-view-tabs');
+  if (tabs) tabs.style.display = 'flex';
+  // 默认显示当前实验里正在看的视图
+  setReportViewMode(result.currentKey, true);
+  if (!silent) showToast('电场图已同步到报告（可切换视图）','success');
+}
+
+function setReportViewMode(viewKey, silent) {
+  if (!_reportSnaps || !_reportSnaps[viewKey]) {
+    if (!silent) showToast('请先点「从实验同步」导入电场图','warning');
+    return;
+  }
+  const img = document.getElementById('report-field-img');
+  const ph = document.getElementById('report-field-placeholder');
+  if (img) { img.src = _reportSnaps[viewKey]; img.style.display = 'block'; }
+  if (ph) ph.style.display = 'none';
+  _reportCurrentView = viewKey;
+  document.querySelectorAll('.rv-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.view === viewKey);
+  });
+}
+
+/* ===== 报告页：可编辑字段持久化（localStorage） ===== */
+(function initReportEditable() {
+  const KEY = 'physlab.report.fields';
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; }
+  }
+  function save(data) {
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const stored = load();
+    document.querySelectorAll('.rep-edit').forEach(el => {
+      const key = el.dataset.rk;
+      if (stored[key] != null) el.textContent = stored[key];
+      el.addEventListener('input', () => {
+        const cur = load();
+        cur[key] = el.textContent;
+        save(cur);
+      });
+      // 阻止 Enter 换行变多行
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+      });
+    });
+  });
+})();
 
 /* ===== Toast ===== */
 function showToast(msg, type='info') {
@@ -1780,6 +3325,1048 @@ document.addEventListener('DOMContentLoaded', () => {
   // Animate progress after a short delay
   setTimeout(() => updateProgress(0), 500);
 });
+
+/* ============================================================
+   静电场模拟工具（嵌入自 index.html，已做样式/作用域隔离）
+   - 全部 DOM 类名改为 exp-* 前缀，避免与外层冲突
+   - 仅 ID 保持原样（外层未占用）
+   - 所有 onclick 通过 window.ExpField.xxx 调用
+   ============================================================ */
+(function() {
+  const root = document.querySelector('.exp-embed');
+  if (!root) return;
+  const fieldCanvas = document.getElementById('fieldCanvas');
+  if (!fieldCanvas) return;
+  const fctx = fieldCanvas.getContext('2d');
+
+  let currentMode = 'coaxial';
+  let parallelViewMode = 'data';
+  let lastPlot = null; // { mode, transform, params } —— 给 hover tooltip 反查用
+  let coaxialData = {
+    equipotentials: [
+      { voltage: 8, points: [{x:12,y:0},{x:0,y:12},{x:-12,y:0},{x:0,y:-12}] },
+      { voltage: 6, points: [{x:20,y:0},{x:0,y:20},{x:-20,y:0},{x:0,y:-20}] },
+      { voltage: 4, points: [{x:30,y:0},{x:0,y:30},{x:-30,y:0},{x:0,y:-30}] },
+      { voltage: 2, points: [{x:40,y:0},{x:0,y:40},{x:-40,y:0},{x:0,y:-40}] }
+    ]
+  };
+  let parallelData = {
+    equipotentials: [
+      { voltage: 8, points: [{x:-24,y:-20},{x:-24,y:0},{x:-24,y:20}] },
+      { voltage: 6, points: [{x:-8,y:-20},{x:-8,y:0},{x:-8,y:20}] },
+      { voltage: 4, points: [{x:8,y:-20},{x:8,y:0},{x:8,y:20}] },
+      { voltage: 2, points: [{x:24,y:-20},{x:24,y:0},{x:24,y:20}] }
+    ]
+  };
+
+  // ===== Tab 切换（限定 .exp-embed 内，避免误击外层 tab） =====
+  root.querySelectorAll('.exp-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      root.querySelectorAll('.exp-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentMode = tab.dataset.mode;
+      updateModeUI();
+      renderEquipotentials();
+      generatePlot();
+    });
+  });
+
+  function updateModeUI() {
+    document.getElementById('coaxial-params').classList.toggle('exp-hidden', currentMode !== 'coaxial');
+    document.getElementById('parallel-params').classList.toggle('exp-hidden', currentMode !== 'parallel');
+    const toggleGroup = document.getElementById('parallel-toggle-group');
+    if (toggleGroup) toggleGroup.style.display = currentMode === 'parallel' ? 'flex' : 'none';
+    const btn = document.getElementById('btn-toggle-view');
+    if (btn) btn.textContent = parallelViewMode === 'data' ? '📐 正负电极电场分布图' : '📊 返回平行电极板电场分布图';
+  }
+
+  function toggleParallelView() {
+    parallelViewMode = parallelViewMode === 'data' ? 'reference' : 'data';
+    updateModeUI();
+    generatePlot();
+  }
+
+  function getData() { return currentMode === 'coaxial' ? coaxialData : parallelData; }
+
+  function addEquipotential() {
+    const data = getData();
+    let defaultV = 5;
+    if (currentMode === 'coaxial') {
+      const vInner = parseFloat(document.getElementById('v-inner').value) || 10;
+      const vOuter = parseFloat(document.getElementById('v-outer').value) || 0;
+      defaultV = (vInner + vOuter) / 2;
+    } else {
+      const vLeft = parseFloat(document.getElementById('pv-left').value) || 10;
+      const vRight = parseFloat(document.getElementById('pv-right').value) || 0;
+      defaultV = (vLeft + vRight) / 2;
+    }
+    data.equipotentials.push({
+      voltage: Math.round(defaultV * 10) / 10,
+      points: [{x:0, y:0}]
+    });
+    renderEquipotentials();
+  }
+
+  function removeEquipotential(index) {
+    const data = getData();
+    data.equipotentials.splice(index, 1);
+    renderEquipotentials();
+  }
+
+  function addPoint(eqIndex) {
+    const data = getData();
+    data.equipotentials[eqIndex].points.push({x:0, y:0});
+    renderEquipotentials();
+  }
+
+  function removePoint(eqIndex, ptIndex) {
+    const data = getData();
+    data.equipotentials[eqIndex].points.splice(ptIndex, 1);
+    if (data.equipotentials[eqIndex].points.length === 0) {
+      data.equipotentials[eqIndex].points.push({x:0, y:0});
+    }
+    renderEquipotentials();
+  }
+
+  function updateEquipotentialVoltage(index, value) {
+    const data = getData();
+    data.equipotentials[index].voltage = parseFloat(value) || 0;
+  }
+
+  function updatePoint(eqIndex, ptIndex, coord, value) {
+    const data = getData();
+    data.equipotentials[eqIndex].points[ptIndex][coord] = parseFloat(value) || 0;
+  }
+
+  function renderEquipotentials() {
+    const container = document.getElementById('equipotentials-container');
+    if (!container) return;
+    const data = getData();
+    container.innerHTML = '';
+    const colors = getEquipotentialColors(data.equipotentials.length);
+
+    data.equipotentials.forEach((eq, eqIdx) => {
+      const card = document.createElement('div');
+      card.className = 'exp-equi-card';
+      const color = colors[eqIdx] || '#666';
+      card.innerHTML = `
+        <div class="exp-equi-header">
+          <div class="exp-color-dot" style="background:${color};"></div>
+          <span>电压:</span>
+          <input type="number" step="0.1" value="${eq.voltage}"
+            onchange="ExpField.updateEquipotentialVoltage(${eqIdx}, this.value)">
+          <span>V</span>
+          <div style="flex:1;"></div>
+          <button class="exp-btn-small exp-btn-del exp-btn-icon" onclick="ExpField.removeEquipotential(${eqIdx})">×</button>
+        </div>
+        <table class="exp-point-table">
+          <thead>
+            <tr><th>X (mm)</th><th>Y (mm)</th><th style="width:30px;"></th></tr>
+          </thead>
+          <tbody>
+            ${eq.points.map((pt, ptIdx) => `
+              <tr>
+                <td><input type="number" step="0.1" value="${pt.x}"
+                  onchange="ExpField.updatePoint(${eqIdx}, ${ptIdx}, 'x', this.value)"></td>
+                <td><input type="number" step="0.1" value="${pt.y}"
+                  onchange="ExpField.updatePoint(${eqIdx}, ${ptIdx}, 'y', this.value)"></td>
+                <td><button class="exp-btn-small exp-btn-del exp-btn-icon"
+                  onclick="ExpField.removePoint(${eqIdx}, ${ptIdx})">×</button></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div class="exp-btn-row">
+          <button class="exp-btn-small exp-btn-add" onclick="ExpField.addPoint(${eqIdx})">+ 添加测量点</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    if (data.equipotentials.length === 0) {
+      container.innerHTML = '<div class="exp-empty">点击上方按钮添加等势线</div>';
+    }
+  }
+
+  // ===== Canvas Drawing Engine =====
+  function worldToScreen(wx, wy, t) { return { x: t.cx + wx*t.scale, y: t.cy - wy*t.scale }; }
+  function computeTransform(bounds, padding) {
+    const availW = fieldCanvas.width - padding.left - padding.right;
+    const availH = fieldCanvas.height - padding.top - padding.bottom;
+    const scaleX = availW / (bounds.xmax - bounds.xmin);
+    const scaleY = availH / (bounds.ymax - bounds.ymin);
+    const scale = Math.min(scaleX, scaleY);
+    const cx = padding.left + (availW - (bounds.xmax - bounds.xmin) * scale) / 2 - bounds.xmin * scale;
+    const cy = padding.top + (availH - (bounds.ymax - bounds.ymin) * scale) / 2 + bounds.ymax * scale;
+    return { scale, cx, cy };
+  }
+
+  function drawGrid(transform, bounds) {
+    if (!document.getElementById('show-grid').checked) return;
+    fctx.strokeStyle = '#e8e8e8';
+    fctx.lineWidth = 1;
+    const worldSpan = (bounds.xmax - bounds.xmin);
+    let step = 1;
+    if (worldSpan > 200) step = 20;
+    else if (worldSpan > 100) step = 10;
+    else if (worldSpan > 40) step = 5;
+    else step = 2;
+    const startX = Math.floor(bounds.xmin / step) * step;
+    const endX = Math.ceil(bounds.xmax / step) * step;
+    const startY = Math.floor(bounds.ymin / step) * step;
+    const endY = Math.ceil(bounds.ymax / step) * step;
+    fctx.beginPath();
+    for (let x = startX; x <= endX; x += step) {
+      const p1 = worldToScreen(x, bounds.ymin, transform);
+      const p2 = worldToScreen(x, bounds.ymax, transform);
+      fctx.moveTo(p1.x, p1.y); fctx.lineTo(p2.x, p2.y);
+    }
+    for (let y = startY; y <= endY; y += step) {
+      const p1 = worldToScreen(bounds.xmin, y, transform);
+      const p2 = worldToScreen(bounds.xmax, y, transform);
+      fctx.moveTo(p1.x, p1.y); fctx.lineTo(p2.x, p2.y);
+    }
+    fctx.stroke();
+    fctx.fillStyle = '#999';
+    fctx.font = '11px sans-serif';
+    fctx.textAlign = 'center';
+    fctx.textBaseline = 'top';
+    for (let x = startX; x <= endX; x += step) {
+      if (Math.abs(x) < 0.001) continue;
+      const p = worldToScreen(x, 0, transform);
+      if (p.y >= 0 && p.y <= fieldCanvas.height) {
+        fctx.fillText(x.toString(), p.x, Math.min(Math.max(p.y + 4, 4), fieldCanvas.height - 14));
+      }
+    }
+    fctx.textAlign = 'left';
+    fctx.textBaseline = 'middle';
+    for (let y = startY; y <= endY; y += step) {
+      if (Math.abs(y) < 0.001) continue;
+      const p = worldToScreen(0, y, transform);
+      if (p.x >= 0 && p.x <= fieldCanvas.width) {
+        fctx.fillText(y.toString(), Math.min(Math.max(p.x + 4, 4), fieldCanvas.width - 30), p.y);
+      }
+    }
+  }
+
+  function drawAxes(transform, bounds) {
+    if (!document.getElementById('show-axis').checked) return;
+    fctx.strokeStyle = '#555';
+    fctx.lineWidth = 1.5;
+    fctx.beginPath();
+    const y0 = worldToScreen(0, 0, transform).y;
+    const leftX = worldToScreen(bounds.xmin, 0, transform);
+    const rightX = worldToScreen(bounds.xmax, 0, transform);
+    fctx.moveTo(leftX.x, y0); fctx.lineTo(rightX.x, y0);
+    const x0 = worldToScreen(0, 0, transform).x;
+    const bottomY = worldToScreen(0, bounds.ymin, transform);
+    const topY = worldToScreen(0, bounds.ymax, transform);
+    fctx.moveTo(x0, bottomY.y); fctx.lineTo(x0, topY.y);
+    fctx.stroke();
+    fctx.fillStyle = '#333';
+    fctx.font = 'bold 13px sans-serif';
+    fctx.textAlign = 'left';
+    fctx.textBaseline = 'top';
+    fctx.fillText('X (mm)', rightX.x - 50, y0 + 6);
+    fctx.textBaseline = 'bottom';
+    fctx.fillText('Y (mm)', x0 + 6, topY.y + 15);
+  }
+
+  function getEquipotentialColors(n) {
+    const colors = [];
+    for (let i = 0; i < n; i++) {
+      const hue = (i * 360 / n + 200) % 360;
+      colors.push(`hsl(${hue}, 70%, 45%)`);
+    }
+    return colors;
+  }
+
+  function drawArrow(x, y, angle, size) {
+    fctx.save();
+    fctx.translate(x, y);
+    fctx.rotate(angle);
+    fctx.beginPath();
+    fctx.moveTo(0, 0);
+    fctx.lineTo(-size, -size / 2);
+    fctx.lineTo(-size, size / 2);
+    fctx.closePath();
+    fctx.fill();
+    fctx.restore();
+  }
+
+  function drawCoaxial() {
+    const cx = parseFloat(document.getElementById('cx-center').value) || 0;
+    const cy = parseFloat(document.getElementById('cy-center').value) || 0;
+    const rInner = parseFloat(document.getElementById('r-inner').value) || 10;
+    const rOuter = parseFloat(document.getElementById('r-outer').value) || 50;
+    const vInner = parseFloat(document.getElementById('v-inner').value) || 10;
+    const vOuter = parseFloat(document.getElementById('v-outer').value) || 0;
+    const data = coaxialData;
+
+    const margin = Math.max(rOuter * 0.3, 10);
+    const bounds = {
+      xmin: cx - rOuter - margin, xmax: cx + rOuter + margin,
+      ymin: cy - rOuter - margin, ymax: cy + rOuter + margin
+    };
+    const padding = { top: 30, right: 40, bottom: 40, left: 50 };
+    const transform = computeTransform(bounds, padding);
+
+    fctx.fillStyle = '#ffffff';
+    fctx.fillRect(0, 0, fieldCanvas.width, fieldCanvas.height);
+    drawGrid(transform, bounds);
+    drawAxes(transform, bounds);
+
+    const center = worldToScreen(cx, cy, transform);
+    const innerR = rInner * transform.scale;
+    const outerR = rOuter * transform.scale;
+
+    fctx.strokeStyle = '#2c3e50';
+    fctx.lineWidth = 3;
+    fctx.beginPath();
+    fctx.arc(center.x, center.y, outerR, 0, Math.PI * 2);
+    fctx.stroke();
+
+    const innerRDisplay = innerR * 0.6;
+    fctx.fillStyle = '#34495e';
+    fctx.beginPath();
+    fctx.arc(center.x, center.y, innerRDisplay, 0, Math.PI * 2);
+    fctx.fill();
+    fctx.strokeStyle = '#2c3e50';
+    fctx.lineWidth = 2;
+    fctx.stroke();
+
+    fctx.fillStyle = '#2c3e50';
+    fctx.font = 'bold 12px sans-serif';
+    fctx.textAlign = 'center';
+    fctx.textBaseline = 'bottom';
+    fctx.fillText(`外电极 ${vOuter}V`, center.x, center.y - outerR - 4);
+    fctx.fillStyle = 'white';
+    fctx.textBaseline = 'middle';
+    fctx.fillText(`${vInner}V`, center.x, center.y);
+
+    if (document.getElementById('show-equipotential').checked) {
+      const colors = getEquipotentialColors(data.equipotentials.length);
+      data.equipotentials.forEach((eq, idx) => {
+        const V = eq.voltage;
+        if ((V <= Math.max(vInner, vOuter) && V >= Math.min(vInner, vOuter)) === false) return;
+        let r, hasMeasuredPoints;
+        if (eq.points.length > 0) {
+          const distances = eq.points.map(p => Math.sqrt((p.x - cx) ** 2 + (p.y - cy) ** 2));
+          r = distances.reduce((a, b) => a + b, 0) / distances.length;
+          hasMeasuredPoints = true;
+        } else {
+          if (Math.abs(vOuter - vInner) < 0.001) r = rInner;
+          else r = rInner * Math.exp((V - vInner) / (vOuter - vInner) * Math.log(rOuter / rInner));
+          hasMeasuredPoints = false;
+        }
+        const sr = r * transform.scale;
+        fctx.strokeStyle = colors[idx];
+        fctx.lineWidth = 2;
+        fctx.setLineDash(hasMeasuredPoints ? [] : [6, 4]);
+        fctx.beginPath();
+        fctx.arc(center.x, center.y, sr, 0, Math.PI * 2);
+        fctx.stroke();
+        const angle = Math.PI / 4 + idx * 0.3;
+        const lx = center.x + sr * Math.cos(angle);
+        const ly = center.y - sr * Math.sin(angle);
+        fctx.fillStyle = colors[idx];
+        fctx.font = 'bold 11px sans-serif';
+        fctx.textAlign = 'center';
+        fctx.textBaseline = 'bottom';
+        fctx.fillText(`${V}V`, lx, ly - 2);
+      });
+      fctx.setLineDash([]);
+    }
+
+    if (document.getElementById('show-fieldline').checked) {
+      const nLines = 16;
+      fctx.strokeStyle = '#e74c3c';
+      fctx.lineWidth = 1;
+      fctx.setLineDash([5, 5]);
+      for (let i = 0; i < nLines; i++) {
+        const angle = (i * 2 * Math.PI) / nLines;
+        const x1 = cx + rInner * Math.cos(angle);
+        const y1 = cy + rInner * Math.sin(angle);
+        const x2 = cx + rOuter * Math.cos(angle);
+        const y2 = cy + rOuter * Math.sin(angle);
+        const p1 = worldToScreen(x1, y1, transform);
+        const p2 = worldToScreen(x2, y2, transform);
+        fctx.beginPath();
+        fctx.moveTo(p1.x, p1.y); fctx.lineTo(p2.x, p2.y);
+        fctx.stroke();
+      }
+      fctx.setLineDash([]);
+      fctx.fillStyle = '#e74c3c';
+      for (let i = 0; i < nLines; i++) {
+        const angle = (i * 2 * Math.PI) / nLines;
+        const midR = (rInner + rOuter) / 2;
+        const xMid = cx + midR * Math.cos(angle);
+        const yMid = cy + midR * Math.sin(angle);
+        const pMid = worldToScreen(xMid, yMid, transform);
+        const dir = vInner > vOuter ? 1 : -1;
+        drawArrow(pMid.x, pMid.y, angle + (dir > 0 ? 0 : Math.PI), 6);
+      }
+    }
+
+    if (document.getElementById('show-points').checked) {
+      const colors = getEquipotentialColors(data.equipotentials.length);
+      data.equipotentials.forEach((eq, idx) => {
+        fctx.fillStyle = colors[idx];
+        fctx.strokeStyle = '#fff';
+        fctx.lineWidth = 1.5;
+        eq.points.forEach(pt => {
+          const p = worldToScreen(pt.x, pt.y, transform);
+          fctx.beginPath();
+          fctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+          fctx.fill();
+          fctx.stroke();
+        });
+      });
+    }
+
+    lastPlot = { mode: 'coaxial', transform, params: { cx, cy, rInner, rOuter, vInner, vOuter } };
+  }
+
+  function drawParallel() {
+    const xLeft = parseFloat(document.getElementById('px-left').value) || -40;
+    const xRight = parseFloat(document.getElementById('px-right').value) || 40;
+    const yStart = parseFloat(document.getElementById('py-start').value) || -60;
+    const yEnd = parseFloat(document.getElementById('py-end').value) || 60;
+    const vLeft = parseFloat(document.getElementById('pv-left').value) || 10;
+    const vRight = parseFloat(document.getElementById('pv-right').value) || 0;
+    const data = parallelData;
+
+    const width = Math.abs(xRight - xLeft);
+    const height = Math.abs(yEnd - yStart);
+    const margin = Math.max(width * 0.15, height * 0.15, 10);
+    const bounds = {
+      xmin: Math.min(xLeft, xRight) - margin, xmax: Math.max(xLeft, xRight) + margin,
+      ymin: Math.min(yStart, yEnd) - margin, ymax: Math.max(yStart, yEnd) + margin
+    };
+    const padding = { top: 30, right: 40, bottom: 40, left: 50 };
+    const transform = computeTransform(bounds, padding);
+
+    fctx.fillStyle = '#ffffff';
+    fctx.fillRect(0, 0, fieldCanvas.width, fieldCanvas.height);
+    drawGrid(transform, bounds);
+    drawAxes(transform, bounds);
+
+    const pLeftTop = worldToScreen(xLeft, yEnd, transform);
+    const pLeftBottom = worldToScreen(xLeft, yStart, transform);
+    const pRightTop = worldToScreen(xRight, yEnd, transform);
+    const pRightBottom = worldToScreen(xRight, yStart, transform);
+    const plateWidth = 4;
+
+    fctx.fillStyle = '#34495e';
+    fctx.fillRect(pLeftTop.x - plateWidth, pLeftTop.y, plateWidth * 2, pLeftBottom.y - pLeftTop.y);
+    fctx.strokeStyle = '#2c3e50';
+    fctx.lineWidth = 2;
+    fctx.strokeRect(pLeftTop.x - plateWidth, pLeftTop.y, plateWidth * 2, pLeftBottom.y - pLeftTop.y);
+    fctx.fillRect(pRightTop.x - plateWidth, pRightTop.y, plateWidth * 2, pRightBottom.y - pRightTop.y);
+    fctx.strokeRect(pRightTop.x - plateWidth, pRightTop.y, plateWidth * 2, pRightBottom.y - pRightTop.y);
+
+    fctx.fillStyle = '#2c3e50';
+    fctx.font = 'bold 12px sans-serif';
+    fctx.textAlign = 'center';
+    fctx.textBaseline = 'bottom';
+    fctx.fillText(`左极板 ${vLeft}V`, (pLeftTop.x + pLeftBottom.x) / 2, pLeftTop.y - 4);
+    fctx.fillText(`右极板 ${vRight}V`, (pRightTop.x + pRightBottom.x) / 2, pRightTop.y - 4);
+
+    if (document.getElementById('show-equipotential').checked) {
+      const colors = getEquipotentialColors(data.equipotentials.length);
+      data.equipotentials.forEach((eq, idx) => {
+        const V = eq.voltage;
+        if ((V <= Math.max(vLeft, vRight) && V >= Math.min(vLeft, vRight)) === false) return;
+        let xLine;
+        const hasPoints = eq.points.length > 0;
+        if (hasPoints) {
+          xLine = eq.points.reduce((sum, p) => sum + p.x, 0) / eq.points.length;
+        } else {
+          if (Math.abs(vRight - vLeft) < 0.001) xLine = xLeft;
+          else xLine = xLeft + (V - vLeft) / (vRight - vLeft) * (xRight - xLeft);
+        }
+        const p1 = worldToScreen(xLine, bounds.ymin, transform);
+        const p2 = worldToScreen(xLine, bounds.ymax, transform);
+        fctx.strokeStyle = colors[idx];
+        fctx.lineWidth = 2;
+        fctx.setLineDash(hasPoints ? [] : [6, 4]);
+        fctx.beginPath();
+        fctx.moveTo(p1.x, p1.y); fctx.lineTo(p2.x, p2.y);
+        fctx.stroke();
+        const ly = p1.y + (p2.y - p1.y) * 0.15 + idx * 18;
+        fctx.fillStyle = colors[idx];
+        fctx.font = 'bold 11px sans-serif';
+        fctx.textAlign = 'left';
+        fctx.textBaseline = 'middle';
+        fctx.fillText(`${V}V`, p1.x + 4, ly);
+      });
+      fctx.setLineDash([]);
+    }
+
+    if (document.getElementById('show-fieldline').checked) {
+      const nLines = 12;
+      const yStep = (yEnd - yStart) / (nLines + 1);
+      fctx.strokeStyle = '#e74c3c';
+      fctx.lineWidth = 1;
+      fctx.setLineDash([5, 5]);
+      for (let i = 1; i <= nLines; i++) {
+        const yLine = yStart + i * yStep;
+        const p1 = worldToScreen(xLeft, yLine, transform);
+        const p2 = worldToScreen(xRight, yLine, transform);
+        fctx.beginPath();
+        fctx.moveTo(p1.x, p1.y); fctx.lineTo(p2.x, p2.y);
+        fctx.stroke();
+      }
+      fctx.setLineDash([]);
+      fctx.fillStyle = '#e74c3c';
+      for (let i = 1; i <= nLines; i++) {
+        const yLine = yStart + i * yStep;
+        const xMid = (xLeft + xRight) / 2;
+        const pMid = worldToScreen(xMid, yLine, transform);
+        const dir = vLeft > vRight ? 0 : Math.PI;
+        drawArrow(pMid.x, pMid.y, dir, 6);
+      }
+    }
+
+    if (document.getElementById('show-points').checked) {
+      const colors = getEquipotentialColors(data.equipotentials.length);
+      data.equipotentials.forEach((eq, idx) => {
+        fctx.fillStyle = colors[idx];
+        fctx.strokeStyle = '#fff';
+        fctx.lineWidth = 1.5;
+        eq.points.forEach(pt => {
+          const p = worldToScreen(pt.x, pt.y, transform);
+          fctx.beginPath();
+          fctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+          fctx.fill();
+          fctx.stroke();
+        });
+      });
+    }
+
+    lastPlot = { mode: 'parallel', transform, params: { xLeft, xRight, yStart, yEnd, vLeft, vRight } };
+  }
+
+  function drawParallelReference() {
+    const xLeft = parseFloat(document.getElementById('px-left').value) || -40;
+    const xRight = parseFloat(document.getElementById('px-right').value) || 40;
+    const yStart = parseFloat(document.getElementById('py-start').value) || -60;
+    const yEnd = parseFloat(document.getElementById('py-end').value) || 60;
+    const vLeft = parseFloat(document.getElementById('pv-left').value) || 0;
+    const vRight = parseFloat(document.getElementById('pv-right').value) || 10;
+    const data = parallelData;
+
+    const qPos = { x: xRight, y: (yStart + yEnd) / 2 };
+    const qNeg = { x: xLeft, y: (yStart + yEnd) / 2 };
+    const d = Math.abs(xRight - xLeft);
+    const Q = Math.max(Math.abs(vRight - vLeft), 0.1);
+
+    const margin = d * 0.8;
+    const bounds = {
+      xmin: Math.min(xLeft, xRight) - margin, xmax: Math.max(xLeft, xRight) + margin,
+      ymin: Math.min(yStart, yEnd) - margin, ymax: Math.max(yStart, yEnd) + margin
+    };
+    const pad = { top: 30, right: 40, bottom: 40, left: 50 };
+    const transform = computeTransform(bounds, pad);
+
+    fctx.fillStyle = '#ffffff';
+    fctx.fillRect(0, 0, fieldCanvas.width, fieldCanvas.height);
+    drawGrid(transform, bounds);
+    drawAxes(transform, bounds);
+
+    function eField(x, y) {
+      const dx1 = x - qPos.x, dy1 = y - qPos.y;
+      const dx2 = x - qNeg.x, dy2 = y - qNeg.y;
+      const r1c = dx1*dx1 + dy1*dy1;
+      const r2c = dx2*dx2 + dy2*dy2;
+      const r1 = Math.sqrt(r1c);
+      const r2 = Math.sqrt(r2c);
+      const Ex = dx1/(r1*r1c) - dx2/(r2*r2c);
+      const Ey = dy1/(r1*r1c) - dy2/(r2*r2c);
+      return { Ex, Ey, E: Math.sqrt(Ex*Ex + Ey*Ey), r1, r2 };
+    }
+
+    const colors = getEquipotentialColors(data.equipotentials.length);
+    data.equipotentials.forEach((eq, idx) => {
+      const V = eq.voltage;
+      const distPos = Math.abs(V - vRight);
+      const distNeg = Math.abs(V - vLeft);
+      fctx.strokeStyle = colors[idx];
+      fctx.lineWidth = 2;
+      let rPos = 0.12 * d * (1 - distPos / Q);
+      if (rPos < 0.03 * d) rPos = 0.03 * d;
+      if (rPos > 0.5 * d) rPos = 0.5 * d;
+      fctx.beginPath();
+      const cPos = worldToScreen(qPos.x, qPos.y, transform);
+      fctx.arc(cPos.x, cPos.y, rPos * transform.scale, 0, Math.PI * 2);
+      fctx.stroke();
+      let rNeg = 0.12 * d * (1 - distNeg / Q);
+      if (rNeg < 0.03 * d) rNeg = 0.03 * d;
+      if (rNeg > 0.5 * d) rNeg = 0.5 * d;
+      fctx.beginPath();
+      const cNeg = worldToScreen(qNeg.x, qNeg.y, transform);
+      fctx.arc(cNeg.x, cNeg.y, rNeg * transform.scale, 0, Math.PI * 2);
+      fctx.stroke();
+    });
+
+    fctx.strokeStyle = '#1a5276';
+    fctx.lineWidth = 1.2;
+
+    function traceFieldLine(startAngle) {
+      const startR = d * 0.025;
+      let x = qPos.x + startR * Math.cos(startAngle);
+      let y = qPos.y + startR * Math.sin(startAngle);
+      const step = d * 0.003;
+      const maxSteps = 1500;
+      const points = [{x, y}];
+      for (let i = 0; i < maxSteps; i++) {
+        const f = eField(x, y);
+        if (f.r2 < startR) { points.push({x: qNeg.x, y: qNeg.y}); break; }
+        if (f.E < 1e-6) break;
+        const dxToPos = x - qPos.x, dyToPos = y - qPos.y;
+        if (dxToPos*dxToPos + dyToPos*dyToPos > d*d*4) break;
+        x += step * f.Ex / f.E;
+        y += step * f.Ey / f.E;
+        points.push({x, y});
+      }
+      return points;
+    }
+
+    const nFieldLines = 20;
+    for (let i = 0; i < nFieldLines; i++) {
+      const angle = (i / nFieldLines) * 2 * Math.PI;
+      const pts = traceFieldLine(angle);
+      if (pts.length < 5) continue;
+      fctx.beginPath();
+      const p0 = worldToScreen(pts[0].x, pts[0].y, transform);
+      fctx.moveTo(p0.x, p0.y);
+      for (let j = 1; j < pts.length; j++) {
+        const p = worldToScreen(pts[j].x, pts[j].y, transform);
+        fctx.lineTo(p.x, p.y);
+      }
+      fctx.stroke();
+      const midIdx = Math.floor(pts.length * 0.5);
+      if (midIdx > 3 && midIdx < pts.length - 3) {
+        const p1 = pts[midIdx - 3];
+        const p2 = pts[midIdx + 3];
+        const ang = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+        const sp = worldToScreen(pts[midIdx].x, pts[midIdx].y, transform);
+        drawArrow(sp.x, sp.y, ang, 7);
+      }
+    }
+
+    function traceFieldLineFromNeg(startAngle) {
+      const startR = d * 0.025;
+      let x = qNeg.x + startR * Math.cos(startAngle);
+      let y = qNeg.y + startR * Math.sin(startAngle);
+      const step = d * 0.003;
+      const maxSteps = 1500;
+      const points = [{x, y}];
+      for (let i = 0; i < maxSteps; i++) {
+        const f = eField(x, y);
+        if (f.E < 1e-6) break;
+        x -= step * f.Ex / f.E;
+        y -= step * f.Ey / f.E;
+        points.push({x, y});
+        const dxToNeg = x - qNeg.x, dyToNeg = y - qNeg.y;
+        if (dxToNeg*dxToNeg + dyToNeg*dyToNeg > d*d*4) break;
+      }
+      return points;
+    }
+
+    const nLinesNeg = 10;
+    for (let i = 0; i < nLinesNeg; i++) {
+      const angle = Math.PI * 0.5 + (i / nLinesNeg) * Math.PI;
+      const pts = traceFieldLineFromNeg(angle);
+      if (pts.length < 5) continue;
+      fctx.beginPath();
+      const p0 = worldToScreen(pts[0].x, pts[0].y, transform);
+      fctx.moveTo(p0.x, p0.y);
+      for (let j = 1; j < pts.length; j++) {
+        const p = worldToScreen(pts[j].x, pts[j].y, transform);
+        fctx.lineTo(p.x, p.y);
+      }
+      fctx.stroke();
+      const midIdx = Math.floor(pts.length * 0.5);
+      if (midIdx > 3 && midIdx < pts.length - 3) {
+        const p1 = pts[midIdx - 3];
+        const p2 = pts[midIdx + 3];
+        const ang = Math.atan2(p1.y - p2.y, p1.x - p2.x);
+        const sp = worldToScreen(pts[midIdx].x, pts[midIdx].y, transform);
+        drawArrow(sp.x, sp.y, ang, 7);
+      }
+    }
+
+    const pPos = worldToScreen(qPos.x, qPos.y, transform);
+    fctx.fillStyle = '#f1c40f';
+    fctx.beginPath();
+    fctx.arc(pPos.x, pPos.y, 14, 0, Math.PI * 2);
+    fctx.fill();
+    fctx.strokeStyle = '#d4ac0d';
+    fctx.lineWidth = 2;
+    fctx.stroke();
+    fctx.fillStyle = '#2c3e50';
+    fctx.font = 'bold 16px sans-serif';
+    fctx.textAlign = 'center';
+    fctx.textBaseline = 'middle';
+    fctx.fillText('+', pPos.x, pPos.y);
+
+    const pNeg = worldToScreen(qNeg.x, qNeg.y, transform);
+    fctx.fillStyle = '#f1c40f';
+    fctx.beginPath();
+    fctx.arc(pNeg.x, pNeg.y, 14, 0, Math.PI * 2);
+    fctx.fill();
+    fctx.stroke();
+    fctx.fillStyle = '#2c3e50';
+    fctx.fillText('-', pNeg.x, pNeg.y);
+
+    if (document.getElementById('show-points').checked) {
+      data.equipotentials.forEach((eq, idx) => {
+        fctx.fillStyle = colors[idx];
+        fctx.strokeStyle = '#fff';
+        fctx.lineWidth = 1.5;
+        eq.points.forEach(pt => {
+          const p = worldToScreen(pt.x, pt.y, transform);
+          fctx.beginPath();
+          fctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+          fctx.fill();
+          fctx.stroke();
+        });
+      });
+    }
+
+    lastPlot = { mode: 'parallel-ref', transform, params: { qPos, qNeg, vLeft, vRight, d } };
+  }
+
+  function renderAnalysis() {
+    const container = document.getElementById('analysis-container');
+    if (!container) return;
+    const data = getData();
+    const validEqs = data.equipotentials.filter(eq => eq.points.length > 0);
+    if (validEqs.length === 0) {
+      container.innerHTML = '<div class="exp-empty">暂无有效测量数据，请先添加等势线和测量点</div>';
+      return;
+    }
+    let html = '<table class="exp-analysis-table"><thead><tr>';
+    if (currentMode === 'coaxial') {
+      html += '<th>电压(V)</th><th>理论半径(mm)</th><th>实测平均半径(mm)</th><th>相对误差</th></tr></thead><tbody>';
+      const cx = parseFloat(document.getElementById('cx-center').value) || 0;
+      const cy = parseFloat(document.getElementById('cy-center').value) || 0;
+      const rInner = parseFloat(document.getElementById('r-inner').value) || 10;
+      const rOuter = parseFloat(document.getElementById('r-outer').value) || 50;
+      const vInner = parseFloat(document.getElementById('v-inner').value) || 10;
+      const vOuter = parseFloat(document.getElementById('v-outer').value) || 0;
+      validEqs.forEach(eq => {
+        const V = eq.voltage;
+        let rTheory;
+        if (Math.abs(vOuter - vInner) < 0.001) rTheory = rInner;
+        else rTheory = rInner * Math.exp((V - vInner) / (vOuter - vInner) * Math.log(rOuter / rInner));
+        const rValues = eq.points.map(p => Math.sqrt((p.x - cx)**2 + (p.y - cy)**2));
+        const rAvg = rValues.reduce((a,b) => a+b, 0) / rValues.length;
+        const error = Math.abs(rAvg - rTheory) / rTheory * 100;
+        const errorClass = error < 3 ? 'exp-err-good' : (error < 8 ? 'exp-err-mid' : 'exp-err-high');
+        html += `<tr><td>${V.toFixed(1)}</td><td>${rTheory.toFixed(2)}</td><td>${rAvg.toFixed(2)}</td><td class="${errorClass}">${error.toFixed(1)}%</td></tr>`;
+      });
+    } else {
+      html += '<th>电压(V)</th><th>理论X(mm)</th><th>实测平均X(mm)</th><th>相对误差</th></tr></thead><tbody>';
+      const xLeft = parseFloat(document.getElementById('px-left').value) || -40;
+      const xRight = parseFloat(document.getElementById('px-right').value) || 40;
+      const vLeft = parseFloat(document.getElementById('pv-left').value) || 10;
+      const vRight = parseFloat(document.getElementById('pv-right').value) || 0;
+      const d = Math.abs(xRight - xLeft);
+      validEqs.forEach(eq => {
+        const V = eq.voltage;
+        let xTheory;
+        if (Math.abs(vRight - vLeft) < 0.001) xTheory = xLeft;
+        else xTheory = xLeft + (V - vLeft) / (vRight - vLeft) * (xRight - xLeft);
+        const xValues = eq.points.map(p => p.x);
+        const xAvg = xValues.reduce((a,b) => a+b, 0) / xValues.length;
+        const error = Math.abs(xAvg - xTheory) / d * 100;
+        const errorClass = error < 3 ? 'exp-err-good' : (error < 8 ? 'exp-err-mid' : 'exp-err-high');
+        html += `<tr><td>${V.toFixed(1)}</td><td>${xTheory.toFixed(2)}</td><td>${xAvg.toFixed(2)}</td><td class="${errorClass}">${error.toFixed(1)}%</td></tr>`;
+      });
+    }
+    html += '</tbody></table>';
+    container.innerHTML = html;
+  }
+
+  function generatePlot() {
+    if (currentMode === 'coaxial') drawCoaxial();
+    else if (parallelViewMode === 'reference') drawParallelReference();
+    else drawParallel();
+    updateLegend();
+    renderAnalysis();
+  }
+
+  function updateLegend() {
+    const container = document.getElementById('legend-container');
+    if (!container) return;
+    if (currentMode === 'parallel' && parallelViewMode === 'reference') {
+      container.innerHTML = `
+        <div class="exp-legend-item"><div class="exp-legend-color" style="background:#f1c40f; height:12px; width:12px; border-radius:50%;"></div><span>正电荷 (+q)</span></div>
+        <div class="exp-legend-item"><div class="exp-legend-color" style="background:#f1c40f; height:12px; width:12px; border-radius:50%;"></div><span>负电荷 (-q)</span></div>
+        <div class="exp-legend-item"><div class="exp-legend-color" style="background:#1a5276; height:2px;"></div><span>电力线</span></div>
+        <div class="exp-legend-item"><div class="exp-legend-color" style="background:#27ae60; height:2px;"></div><span>等势线</span></div>
+      `;
+      return;
+    }
+    const data = getData();
+    const colors = getEquipotentialColors(data.equipotentials.length);
+    let html = `
+      <div class="exp-legend-item"><div class="exp-legend-color" style="background:#2c3e50; height:2px;"></div><span>电极边界</span></div>
+      <div class="exp-legend-item"><div class="exp-legend-color" style="background:#e74c3c; height:2px;"></div><span>电力线</span></div>
+      <div class="exp-legend-item"><div class="exp-legend-color" style="background:#666; height:2px;"></div><span>实线 = 实测点</span></div>
+      <div class="exp-legend-item"><div class="exp-legend-color" style="background:#666; height:2px; border-top:2px dashed #666;"></div><span>虚线 = 理论值</span></div>
+    `;
+    data.equipotentials.forEach((eq, idx) => {
+      html += `<div class="exp-legend-item"><div class="exp-legend-dot" style="background:${colors[idx]}; border:1px solid #fff;"></div><span>${eq.voltage}V 等势线</span></div>`;
+    });
+    container.innerHTML = html;
+  }
+
+  function downloadImage() {
+    const titleHeight = 42;
+    const titleCanvas = document.createElement('canvas');
+    titleCanvas.width = fieldCanvas.width;
+    titleCanvas.height = fieldCanvas.height + titleHeight;
+    const tCtx = titleCanvas.getContext('2d');
+    tCtx.fillStyle = '#ffffff';
+    tCtx.fillRect(0, 0, titleCanvas.width, titleCanvas.height);
+    tCtx.fillStyle = '#1a5276';
+    tCtx.fillRect(0, 0, titleCanvas.width, titleHeight);
+    tCtx.fillStyle = '#ffffff';
+    tCtx.font = 'bold 16px "Segoe UI", "Microsoft YaHei", sans-serif';
+    tCtx.textAlign = 'left';
+    tCtx.textBaseline = 'middle';
+    const modeText = currentMode === 'coaxial' ? '同轴电极静电场模拟' : '平行电极静电场模拟';
+    tCtx.fillText(`${modeText}  —  ${new Date().toLocaleDateString('zh-CN')}`, 20, titleHeight / 2);
+    tCtx.drawImage(fieldCanvas, 0, titleHeight);
+    const link = document.createElement('a');
+    link.download = `静电场模拟_${currentMode === 'coaxial' ? '同轴电极' : '平行电极'}_${new Date().toISOString().slice(0,10)}.png`;
+    link.href = titleCanvas.toDataURL('image/png');
+    link.click();
+  }
+
+  // ===== Hover：在鼠标停留点旁显示坐标和电势 =====
+  function computePotential(wx, wy) {
+    if (!lastPlot) return null;
+    const p = lastPlot.params;
+    if (lastPlot.mode === 'coaxial') {
+      const r = Math.sqrt((wx - p.cx) ** 2 + (wy - p.cy) ** 2);
+      if (r <= p.rInner) return p.vInner;
+      if (r >= p.rOuter) return p.vOuter;
+      if (Math.abs(p.vOuter - p.vInner) < 0.001) return p.vInner;
+      const t = Math.log(r / p.rInner) / Math.log(p.rOuter / p.rInner);
+      return p.vInner + t * (p.vOuter - p.vInner);
+    }
+    if (lastPlot.mode === 'parallel') {
+      const xMin = Math.min(p.xLeft, p.xRight);
+      const xMax = Math.max(p.xLeft, p.xRight);
+      let xClamp = wx;
+      if (xClamp < xMin) xClamp = xMin;
+      if (xClamp > xMax) xClamp = xMax;
+      if (Math.abs(p.xRight - p.xLeft) < 0.001) return p.vLeft;
+      const t = (xClamp - p.xLeft) / (p.xRight - p.xLeft);
+      return p.vLeft + t * (p.vRight - p.vLeft);
+    }
+    if (lastPlot.mode === 'parallel-ref') {
+      const r1 = Math.sqrt((wx - p.qPos.x) ** 2 + (wy - p.qPos.y) ** 2);
+      const r2 = Math.sqrt((wx - p.qNeg.x) ** 2 + (wy - p.qNeg.y) ** 2);
+      if (r1 < 0.5 || r2 < 0.5) return null;
+      const raw = (p.d / 2) * (1 / r1 - 1 / r2);
+      const clamped = Math.max(-1, Math.min(1, raw));
+      return (p.vLeft + p.vRight) / 2 + (p.vRight - p.vLeft) / 2 * clamped;
+    }
+    return null;
+  }
+
+  const hoverTip = document.getElementById('exp-hover-tip');
+  const canvasWrap = fieldCanvas.parentElement;
+
+  fieldCanvas.addEventListener('mousemove', (e) => {
+    if (!lastPlot || !hoverTip) return;
+    const cRect = fieldCanvas.getBoundingClientRect();
+    const wRect = canvasWrap.getBoundingClientRect();
+    // 鼠标 → canvas 内部像素
+    const sx = (e.clientX - cRect.left) * (fieldCanvas.width / cRect.width);
+    const sy = (e.clientY - cRect.top) * (fieldCanvas.height / cRect.height);
+    // 内部像素 → 世界坐标（mm）
+    const wx = (sx - lastPlot.transform.cx) / lastPlot.transform.scale;
+    const wy = (lastPlot.transform.cy - sy) / lastPlot.transform.scale;
+    const v = computePotential(wx, wy);
+
+    hoverTip.innerHTML =
+      `X: <b>${wx.toFixed(2)}</b> mm<br>` +
+      `Y: <b>${wy.toFixed(2)}</b> mm` +
+      (v !== null ? `<br>V: <b>${v.toFixed(2)}</b> V` : '');
+    hoverTip.style.display = 'block';
+
+    // tooltip 定位：相对 canvas-wrap，紧贴鼠标右下，靠边时翻转避免溢出
+    const localX = e.clientX - wRect.left;
+    const localY = e.clientY - wRect.top;
+    const tipW = hoverTip.offsetWidth;
+    const tipH = hoverTip.offsetHeight;
+    let tx = localX + 14;
+    let ty = localY + 14;
+    if (tx + tipW > wRect.width - 4) tx = localX - tipW - 14;
+    if (ty + tipH > wRect.height - 4) ty = localY - tipH - 14;
+    if (tx < 4) tx = 4;
+    if (ty < 4) ty = 4;
+    hoverTip.style.left = tx + 'px';
+    hoverTip.style.top = ty + 'px';
+  });
+
+  fieldCanvas.addEventListener('mouseleave', () => {
+    if (hoverTip) hoverTip.style.display = 'none';
+  });
+
+  // 给报告页用：当前电场画布的 PNG dataURL
+  function getCanvasDataURL() {
+    try { return fieldCanvas.toDataURL('image/png'); } catch (e) { return null; }
+  }
+  // 给报告页用：一次性渲染并返回三种视图的 PNG 快照（同轴 / 平行-数据 / 平行-参考）
+  // 调用后会恢复实验 tab 的原显示状态
+  function getCanvasSnapshots() {
+    const origMode = currentMode;
+    const origView = parallelViewMode;
+    const snaps = {};
+    try {
+      currentMode = 'coaxial';
+      drawCoaxial();
+      snaps.coaxial = fieldCanvas.toDataURL('image/png');
+
+      currentMode = 'parallel';
+      parallelViewMode = 'data';
+      drawParallel();
+      snaps.parallel = fieldCanvas.toDataURL('image/png');
+
+      parallelViewMode = 'reference';
+      drawParallelReference();
+      snaps.parallelRef = fieldCanvas.toDataURL('image/png');
+    } catch (e) {
+      // 任何异常都尝试恢复
+    }
+    // 恢复原状态
+    currentMode = origMode;
+    parallelViewMode = origView;
+    if (currentMode === 'coaxial') drawCoaxial();
+    else if (parallelViewMode === 'reference') drawParallelReference();
+    else drawParallel();
+
+    const currentKey = origMode === 'coaxial' ? 'coaxial'
+      : (origView === 'reference' ? 'parallelRef' : 'parallel');
+    return { snaps, currentKey };
+  }
+  // 给报告页用：当前数据分析表（结构化）
+  function getAnalysisRows() {
+    const table = document.querySelector('#analysis-container .exp-analysis-table');
+    if (!table) return null;
+    const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
+    const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr =>
+      Array.from(tr.querySelectorAll('td')).map(td => ({
+        text: td.textContent.trim(),
+        cls: td.className || ''
+      }))
+    );
+    return { headers, rows, mode: currentMode };
+  }
+
+  // 给「数据分析」tab 用：完整结构化分析数据
+  function getAnalysisData() {
+    const data = currentMode === 'coaxial' ? coaxialData : parallelData;
+    const validEqs = data.equipotentials.filter(eq => eq.points.length > 0);
+    const totalPoints = validEqs.reduce((s, eq) => s + eq.points.length, 0);
+
+    if (validEqs.length === 0) {
+      return {
+        mode: currentMode,
+        items: [],
+        detailed: [],
+        stats: { avgError: null, maxError: null, pointCount: 0, equipotentialCount: data.equipotentials.length }
+      };
+    }
+
+    const isCoax = currentMode === 'coaxial';
+    let cx0, cy0, rInner, rOuter, vInner, vOuter, xLeft, xRight, vLeft, vRight, dPlate;
+    if (isCoax) {
+      cx0 = parseFloat(document.getElementById('cx-center').value) || 0;
+      cy0 = parseFloat(document.getElementById('cy-center').value) || 0;
+      rInner = parseFloat(document.getElementById('r-inner').value) || 10;
+      rOuter = parseFloat(document.getElementById('r-outer').value) || 50;
+      vInner = parseFloat(document.getElementById('v-inner').value) || 10;
+      vOuter = parseFloat(document.getElementById('v-outer').value) || 0;
+    } else {
+      xLeft = parseFloat(document.getElementById('px-left').value) || -40;
+      xRight = parseFloat(document.getElementById('px-right').value) || 40;
+      vLeft = parseFloat(document.getElementById('pv-left').value) || 10;
+      vRight = parseFloat(document.getElementById('pv-right').value) || 0;
+      dPlate = Math.abs(xRight - xLeft) || 1;
+    }
+
+    const items = validEqs.map(eq => {
+      const V = eq.voltage;
+      let theory, measured, perPoint;
+      if (isCoax) {
+        if (Math.abs(vOuter - vInner) < 0.001) theory = rInner;
+        else theory = rInner * Math.exp((V - vInner) / (vOuter - vInner) * Math.log(rOuter / rInner));
+        perPoint = eq.points.map(p => Math.sqrt((p.x - cx0) ** 2 + (p.y - cy0) ** 2));
+        measured = perPoint.reduce((a, b) => a + b, 0) / perPoint.length;
+        return { voltage: V, theory, measured, perPoint, relErr: Math.abs(measured - theory) / theory * 100 };
+      } else {
+        if (Math.abs(vRight - vLeft) < 0.001) theory = xLeft;
+        else theory = xLeft + (V - vLeft) / (vRight - vLeft) * (xRight - xLeft);
+        perPoint = eq.points.map(p => p.x);
+        measured = perPoint.reduce((a, b) => a + b, 0) / perPoint.length;
+        return { voltage: V, theory, measured, perPoint, relErr: Math.abs(measured - theory) / dPlate * 100 };
+      }
+    });
+    items.sort((a, b) => a.voltage - b.voltage);
+
+    // 详细测量数据：每条等势线展开成多个测量点
+    const detailed = [];
+    let pIdx = 0;
+    items.forEach(it => {
+      it.perPoint.forEach(val => {
+        pIdx++;
+        const absErr = Math.abs(val - it.theory);
+        const relErr = isCoax ? (absErr / it.theory * 100) : (absErr / dPlate * 100);
+        detailed.push({
+          id: 'P' + pIdx,
+          voltage: it.voltage,
+          theory: it.theory,
+          measured: val,
+          absErr,
+          relErr
+        });
+      });
+    });
+
+    const errs = items.map(it => it.relErr);
+    return {
+      mode: currentMode,
+      items,
+      detailed,
+      stats: {
+        avgError: errs.reduce((a, b) => a + b, 0) / errs.length,
+        maxError: Math.max(...errs),
+        pointCount: totalPoints,
+        equipotentialCount: data.equipotentials.length
+      }
+    };
+  }
+
+  // 暴露给 onclick 用
+  window.ExpField = {
+    addEquipotential, removeEquipotential, addPoint, removePoint,
+    updateEquipotentialVoltage, updatePoint,
+    generatePlot, toggleParallelView, downloadImage,
+    getCanvasDataURL, getCanvasSnapshots, getAnalysisRows, getAnalysisData
+  };
+
+  // 初始化（DOM 已就绪：脚本在 body 末尾）
+  renderEquipotentials();
+  generatePlot();
+})();
 </script>
 </body>
 </html>
