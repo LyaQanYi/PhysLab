@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>静电场模拟描绘实验 - 数据可视化工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a5276 0%, #2980b9 100%);
+            color: white;
+            padding: 12px 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #ddd;
+            padding: 0 30px;
+        }
+
+        .tab {
+            padding: 10px 24px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .tab:hover {
+            color: #2980b9;
+            background: #f8f9fa;
+        }
+
+        .tab.active {
+            color: #2980b9;
+            border-bottom-color: #2980b9;
+            background: #f8f9fa;
+        }
+
+        .container {
+            display: flex;
+            align-items: stretch;
+            height: calc(100vh - 125px);
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .left-panel {
+            width: 420px;
+            min-width: 420px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 600px;
+        }
+
+        .section {
+            border-bottom: 1px solid #eee;
+        }
+
+        .section-header {
+            padding: 14px 18px;
+            background: #f8f9fa;
+            font-weight: 600;
+            font-size: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .section-header:hover {
+            background: #eef0f2;
+        }
+
+        .section-body {
+            padding: 16px 18px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 7px 10px;
+            border: 1px solid #d0d7de;
+            border-radius: 5px;
+            font-size: 13px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2980b9;
+            box-shadow: 0 0 0 2px rgba(41,128,185,0.1);
+        }
+
+        .equipotential-card {
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .equipotential-header {
+            background: #f1f8ff;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .equipotential-header input {
+            width: 80px;
+            padding: 5px 8px;
+            border: 1px solid #d0d7de;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .equipotential-header span {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .btn-add {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-add:hover {
+            background: #218838;
+        }
+
+        .btn-del {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-del:hover {
+            background: #c82333;
+        }
+
+        .btn-icon {
+            padding: 4px 8px;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .point-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .point-table th {
+            background: #f6f8fa;
+            padding: 6px 8px;
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+            font-size: 12px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .point-table td {
+            padding: 4px 8px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .point-table input {
+            width: 70px;
+            padding: 4px 6px;
+            border: 1px solid #d0d7de;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .point-table input:focus {
+            outline: none;
+            border-color: #2980b9;
+        }
+
+        .btn-row {
+            padding: 8px 12px;
+            background: #fafbfc;
+            border-top: 1px solid #e1e4e8;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: #2980b9;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1f6691;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #219a52;
+        }
+
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fafbfc;
+            padding: 20px;
+            position: relative;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+        }
+
+        .toolbar {
+            padding: 8px 14px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .toolbar-label {
+            font-size: 12px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #888;
+            padding: 40px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 6px 14px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            font-size: 11px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Scrollbar styling */
+        .left-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .left-panel::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .left-panel::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .collapsible-icon {
+            transition: transform 0.3s;
+            font-size: 12px;
+        }
+
+        .collapsed .collapsible-icon {
+            transform: rotate(-90deg);
+        }
+
+        .toggle-group {
+            display: flex;
+            background: #e9ecef;
+            border-radius: 5px;
+            padding: 3px;
+            gap: 3px;
+        }
+
+        .toggle-btn {
+            padding: 5px 12px;
+            border: none;
+            background: transparent;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            color: #555;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: white;
+            color: #2980b9;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            font-weight: 500;
+        }
+
+        .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+
+        .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .analysis-table th {
+            background: #f6f8fa;
+            padding: 6px 8px;
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+            font-size: 11px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .analysis-table td {
+            padding: 5px 8px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+        }
+
+        .analysis-table tr:hover td {
+            background: #f8f9fa;
+        }
+
+        .error-good { color: #27ae60; font-weight: 600; }
+        .error-medium { color: #f39c12; font-weight: 600; }
+        .error-high { color: #e74c3c; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>静电场模拟描绘实验 - 数据可视化工具</h1>
+        <p>填入等势线测量坐标数据，自动生成高精度静电场等势线及电力线图</p>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" data-mode="coaxial">同轴电极</div>
+        <div class="tab" data-mode="parallel">平行电极</div>
+    </div>
+
+    <div class="container">
+        <!-- Left Panel: Data Input -->
+        <div class="left-panel panel">
+            <!-- Coaxial Parameters -->
+            <div id="coaxial-params" class="section">
+                <div class="section-header">
+                    <span>📐 电极参数</span>
+                </div>
+                <div class="section-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>圆心 X (mm)</label>
+                            <input type="number" id="cx-center" value="0" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>圆心 Y (mm)</label>
+                            <input type="number" id="cy-center" value="0" step="0.1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>内电极半径 (mm)</label>
+                            <input type="number" id="r-inner" value="10" step="0.1" min="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>外电极半径 (mm)</label>
+                            <input type="number" id="r-outer" value="50" step="0.1" min="0.1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>内电极电压 (V)</label>
+                            <input type="number" id="v-inner" value="10" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>外电极电压 (V)</label>
+                            <input type="number" id="v-outer" value="0" step="0.1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parallel Parameters -->
+            <div id="parallel-params" class="section hidden">
+                <div class="section-header">
+                    <span>📐 电极参数</span>
+                </div>
+                <div class="section-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>左极板 X (mm)</label>
+                            <input type="number" id="px-left" value="-40" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>右极板 X (mm)</label>
+                            <input type="number" id="px-right" value="40" step="0.1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>极板 Y 起点 (mm)</label>
+                            <input type="number" id="py-start" value="-60" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>极板 Y 终点 (mm)</label>
+                            <input type="number" id="py-end" value="60" step="0.1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>左极板电压 (V)</label>
+                            <input type="number" id="pv-left" value="10" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>右极板电压 (V)</label>
+                            <input type="number" id="pv-right" value="0" step="0.1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Equipotential Lines Data -->
+            <div class="section">
+                <div class="section-header">
+                    <span>📊 等势线测量数据</span>
+                    <button class="btn-small btn-add" onclick="addEquipotential()">+ 添加等势线</button>
+                </div>
+                <div class="section-body" id="equipotentials-container">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+
+            <!-- Data Analysis -->
+            <div class="section" id="analysis-section">
+                <div class="section-header">
+                    <span>📈 数据分析</span>
+                </div>
+                <div class="section-body" id="analysis-container">
+                    <div class="empty-state">点击"生成电场图"按钮后，此处将显示理论值与实测值的对比分析</div>
+                </div>
+            </div>
+
+            <div class="section" style="padding:12px; border-bottom:none;">
+                <button class="btn btn-primary" onclick="generatePlot()" style="width:100%; justify-content:center;">
+                    🎨 生成电场图
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Panel: Canvas -->
+        <div class="right-panel panel">
+            <div class="canvas-container">
+                <canvas id="fieldCanvas" width="1400" height="1100"></canvas>
+            </div>
+            <div class="legend" id="legend-container">
+                <div class="legend-item"><div class="legend-color" style="background:#2c3e50; height:2px;"></div><span>等势线（理论）</span></div>
+                <div class="legend-item"><div class="legend-color" style="background:#e74c3c; height:2px;"></div><span>电力线（理论）</span></div>
+                <div class="legend-item"><div class="legend-dot" style="background:#3498db; border:1px solid #2980b9;"></div><span>测量点</span></div>
+            </div>
+            <div class="toolbar">
+                <div class="toolbar-group">
+                    <span class="toolbar-label">显示选项:</span>
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="show-grid" checked onchange="generatePlot()">
+                        <span>网格</span>
+                    </label>
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="show-axis" checked onchange="generatePlot()">
+                        <span>坐标轴</span>
+                    </label>
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="show-equipotential" checked onchange="generatePlot()">
+                        <span>等势线</span>
+                    </label>
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="show-fieldline" checked onchange="generatePlot()">
+                        <span>电力线</span>
+                    </label>
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="show-points" checked onchange="generatePlot()">
+                        <span>测量点</span>
+                    </label>
+                </div>
+                <div style="flex:1;"></div>
+                <div class="toolbar-group" id="parallel-toggle-group" style="display:none;">
+                    <button class="btn btn-primary" id="btn-toggle-view" onclick="toggleParallelView()">
+                        📐 正负电极电场分布图
+                    </button>
+                </div>
+                <div class="toolbar-group">
+                    <button class="btn btn-success" onclick="downloadImage()">
+                        💾 下载图片
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ==================== State Management ====================
+    let currentMode = 'coaxial';
+    let parallelViewMode = 'data'; // 'data' | 'reference'
+    let coaxialData = {
+        equipotentials: [
+            { voltage: 8, points: [{x:12,y:0},{x:0,y:12},{x:-12,y:0},{x:0,y:-12}] },
+            { voltage: 6, points: [{x:20,y:0},{x:0,y:20},{x:-20,y:0},{x:0,y:-20}] },
+            { voltage: 4, points: [{x:30,y:0},{x:0,y:30},{x:-30,y:0},{x:0,y:-30}] },
+            { voltage: 2, points: [{x:40,y:0},{x:0,y:40},{x:-40,y:0},{x:0,y:-40}] }
+        ]
+    };
+    let parallelData = {
+        equipotentials: [
+            { voltage: 8, points: [{x:-24,y:-20},{x:-24,y:0},{x:-24,y:20}] },
+            { voltage: 6, points: [{x:-8,y:-20},{x:-8,y:0},{x:-8,y:20}] },
+            { voltage: 4, points: [{x:8,y:-20},{x:8,y:0},{x:8,y:20}] },
+            { voltage: 2, points: [{x:24,y:-20},{x:24,y:0},{x:24,y:20}] }
+        ]
+    };
+
+    // ==================== UI Functions ====================
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentMode = tab.dataset.mode;
+            updateModeUI();
+            renderEquipotentials();
+            generatePlot();
+        });
+    });
+
+    function updateModeUI() {
+        document.getElementById('coaxial-params').classList.toggle('hidden', currentMode !== 'coaxial');
+        document.getElementById('parallel-params').classList.toggle('hidden', currentMode !== 'parallel');
+        const toggleGroup = document.getElementById('parallel-toggle-group');
+        if (toggleGroup) toggleGroup.style.display = currentMode === 'parallel' ? 'flex' : 'none';
+        const btn = document.getElementById('btn-toggle-view');
+        if (btn) btn.textContent = parallelViewMode === 'data' ? '📐 正负电极电场分布图' : '📊 返回平行电极板电场分布图';
+    }
+
+    function toggleSection(header) {
+        const body = header.nextElementSibling;
+        const isCollapsed = body.style.display === 'none';
+        body.style.display = isCollapsed ? 'block' : 'none';
+        header.classList.toggle('collapsed', !isCollapsed);
+    }
+
+    function toggleParallelView() {
+        parallelViewMode = parallelViewMode === 'data' ? 'reference' : 'data';
+        updateModeUI();
+        generatePlot();
+    }
+
+    function getData() {
+        return currentMode === 'coaxial' ? coaxialData : parallelData;
+    }
+
+    function addEquipotential() {
+        const data = getData();
+        // Generate a reasonable default voltage
+        let defaultV = 5;
+        if (currentMode === 'coaxial') {
+            const vInner = parseFloat(document.getElementById('v-inner').value) || 10;
+            const vOuter = parseFloat(document.getElementById('v-outer').value) || 0;
+            defaultV = (vInner + vOuter) / 2;
+        } else {
+            const vLeft = parseFloat(document.getElementById('pv-left').value) || 10;
+            const vRight = parseFloat(document.getElementById('pv-right').value) || 0;
+            defaultV = (vLeft + vRight) / 2;
+        }
+        data.equipotentials.push({
+            voltage: Math.round(defaultV * 10) / 10,
+            points: [{x:0, y:0}]
+        });
+        renderEquipotentials();
+    }
+
+    function removeEquipotential(index) {
+        const data = getData();
+        data.equipotentials.splice(index, 1);
+        renderEquipotentials();
+    }
+
+    function addPoint(eqIndex) {
+        const data = getData();
+        data.equipotentials[eqIndex].points.push({x:0, y:0});
+        renderEquipotentials();
+    }
+
+    function removePoint(eqIndex, ptIndex) {
+        const data = getData();
+        data.equipotentials[eqIndex].points.splice(ptIndex, 1);
+        if (data.equipotentials[eqIndex].points.length === 0) {
+            data.equipotentials[eqIndex].points.push({x:0, y:0});
+        }
+        renderEquipotentials();
+    }
+
+    function updateEquipotentialVoltage(index, value) {
+        const data = getData();
+        data.equipotentials[index].voltage = parseFloat(value) || 0;
+    }
+
+    function updatePoint(eqIndex, ptIndex, coord, value) {
+        const data = getData();
+        data.equipotentials[eqIndex].points[ptIndex][coord] = parseFloat(value) || 0;
+    }
+
+    function renderEquipotentials() {
+        const container = document.getElementById('equipotentials-container');
+        const data = getData();
+        container.innerHTML = '';
+        const colors = getEquipotentialColors(data.equipotentials.length);
+
+        data.equipotentials.forEach((eq, eqIdx) => {
+            const card = document.createElement('div');
+            card.className = 'equipotential-card';
+            const color = colors[eqIdx] || '#666';
+            card.innerHTML = `
+                <div class="equipotential-header">
+                    <div class="color-dot" style="background:${color};"></div>
+                    <span>电压:</span>
+                    <input type="number" step="0.1" value="${eq.voltage}" 
+                        onchange="updateEquipotentialVoltage(${eqIdx}, this.value)">
+                    <span>V</span>
+                    <div style="flex:1;"></div>
+                    <button class="btn-small btn-del btn-icon" onclick="removeEquipotential(${eqIdx})">×</button>
+                </div>
+                <table class="point-table">
+                    <thead>
+                        <tr><th>X (mm)</th><th>Y (mm)</th><th style="width:30px;"></th></tr>
+                    </thead>
+                    <tbody>
+                        ${eq.points.map((pt, ptIdx) => `
+                            <tr>
+                                <td><input type="number" step="0.1" value="${pt.x}" 
+                                    onchange="updatePoint(${eqIdx}, ${ptIdx}, 'x', this.value)"></td>
+                                <td><input type="number" step="0.1" value="${pt.y}" 
+                                    onchange="updatePoint(${eqIdx}, ${ptIdx}, 'y', this.value)"></td>
+                                <td><button class="btn-small btn-del btn-icon" 
+                                    onclick="removePoint(${eqIdx}, ${ptIdx})">×</button></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                <div class="btn-row">
+                    <button class="btn-small btn-add" onclick="addPoint(${eqIdx})">+ 添加测量点</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        if (data.equipotentials.length === 0) {
+            container.innerHTML = '<div class="empty-state">点击上方按钮添加等势线</div>';
+        }
+    }
+
+    // ==================== Canvas Drawing Engine ====================
+    const canvas = document.getElementById('fieldCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function worldToScreen(wx, wy, transform) {
+        return {
+            x: transform.cx + wx * transform.scale,
+            y: transform.cy - wy * transform.scale
+        };
+    }
+
+    function screenToWorld(sx, sy, transform) {
+        return {
+            x: (sx - transform.cx) / transform.scale,
+            y: (transform.cy - sy) / transform.scale
+        };
+    }
+
+    function computeTransform(bounds, padding) {
+        const availW = canvas.width - padding.left - padding.right;
+        const availH = canvas.height - padding.top - padding.bottom;
+        const scaleX = availW / (bounds.xmax - bounds.xmin);
+        const scaleY = availH / (bounds.ymax - bounds.ymin);
+        const scale = Math.min(scaleX, scaleY);
+        const cx = padding.left + (availW - (bounds.xmax - bounds.xmin) * scale) / 2 - bounds.xmin * scale;
+        const cy = padding.top + (availH - (bounds.ymax - bounds.ymin) * scale) / 2 + bounds.ymax * scale;
+        return { scale, cx, cy };
+    }
+
+    function drawGrid(transform, bounds) {
+        if (!document.getElementById('show-grid').checked) return;
+        ctx.strokeStyle = '#e8e8e8';
+        ctx.lineWidth = 1;
+
+        // Determine step size
+        const worldSpan = (bounds.xmax - bounds.xmin);
+        let step = 1;
+        if (worldSpan > 200) step = 20;
+        else if (worldSpan > 100) step = 10;
+        else if (worldSpan > 40) step = 5;
+        else step = 2;
+
+        const startX = Math.floor(bounds.xmin / step) * step;
+        const endX = Math.ceil(bounds.xmax / step) * step;
+        const startY = Math.floor(bounds.ymin / step) * step;
+        const endY = Math.ceil(bounds.ymax / step) * step;
+
+        ctx.beginPath();
+        for (let x = startX; x <= endX; x += step) {
+            const p1 = worldToScreen(x, bounds.ymin, transform);
+            const p2 = worldToScreen(x, bounds.ymax, transform);
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+        }
+        for (let y = startY; y <= endY; y += step) {
+            const p1 = worldToScreen(bounds.xmin, y, transform);
+            const p2 = worldToScreen(bounds.xmax, y, transform);
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+        }
+        ctx.stroke();
+
+        // Draw axis numbers
+        ctx.fillStyle = '#999';
+        ctx.font = '11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        for (let x = startX; x <= endX; x += step) {
+            if (Math.abs(x) < 0.001) continue;
+            const p = worldToScreen(x, 0, transform);
+            if (p.y >= 0 && p.y <= canvas.height) {
+                ctx.fillText(x.toString(), p.x, Math.min(Math.max(p.y + 4, 4), canvas.height - 14));
+            }
+        }
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        for (let y = startY; y <= endY; y += step) {
+            if (Math.abs(y) < 0.001) continue;
+            const p = worldToScreen(0, y, transform);
+            if (p.x >= 0 && p.x <= canvas.width) {
+                ctx.fillText(y.toString(), Math.min(Math.max(p.x + 4, 4), canvas.width - 30), p.y);
+            }
+        }
+    }
+
+    function drawAxes(transform, bounds) {
+        if (!document.getElementById('show-axis').checked) return;
+        ctx.strokeStyle = '#555';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        // X axis
+        const y0 = worldToScreen(0, 0, transform).y;
+        const leftX = worldToScreen(bounds.xmin, 0, transform);
+        const rightX = worldToScreen(bounds.xmax, 0, transform);
+        ctx.moveTo(leftX.x, y0);
+        ctx.lineTo(rightX.x, y0);
+        // Y axis
+        const x0 = worldToScreen(0, 0, transform).x;
+        const bottomY = worldToScreen(0, bounds.ymin, transform);
+        const topY = worldToScreen(0, bounds.ymax, transform);
+        ctx.moveTo(x0, bottomY.y);
+        ctx.lineTo(x0, topY.y);
+        ctx.stroke();
+
+        // Axis labels
+        ctx.fillStyle = '#333';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText('X (mm)', rightX.x - 50, y0 + 6);
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText('Y (mm)', x0 + 6, topY.y + 15);
+    }
+
+    function getEquipotentialColors(n) {
+        // Generate distinct colors using HSL
+        const colors = [];
+        for (let i = 0; i < n; i++) {
+            const hue = (i * 360 / n + 200) % 360;
+            colors.push(`hsl(${hue}, 70%, 45%)`);
+        }
+        return colors;
+    }
+
+    // ==================== Coaxial Drawing ====================
+    function drawCoaxial() {
+        const cx = parseFloat(document.getElementById('cx-center').value) || 0;
+        const cy = parseFloat(document.getElementById('cy-center').value) || 0;
+        const rInner = parseFloat(document.getElementById('r-inner').value) || 10;
+        const rOuter = parseFloat(document.getElementById('r-outer').value) || 50;
+        const vInner = parseFloat(document.getElementById('v-inner').value) || 10;
+        const vOuter = parseFloat(document.getElementById('v-outer').value) || 0;
+        const data = coaxialData;
+
+        // Bounds
+        const margin = Math.max(rOuter * 0.3, 10);
+        const bounds = {
+            xmin: cx - rOuter - margin,
+            xmax: cx + rOuter + margin,
+            ymin: cy - rOuter - margin,
+            ymax: cy + rOuter + margin
+        };
+
+        const padding = { top: 30, right: 40, bottom: 40, left: 50 };
+        const transform = computeTransform(bounds, padding);
+
+        // Background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        drawGrid(transform, bounds);
+        drawAxes(transform, bounds);
+
+        // Draw electrodes
+        const center = worldToScreen(cx, cy, transform);
+        const innerR = rInner * transform.scale;
+        const outerR = rOuter * transform.scale;
+
+        // Outer electrode (ring)
+        ctx.strokeStyle = '#2c3e50';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, outerR, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Inner electrode (filled or ring)
+        const innerRDisplay = innerR * 0.6;
+        ctx.fillStyle = '#34495e';
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, innerRDisplay, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#2c3e50';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Labels
+        ctx.fillStyle = '#2c3e50';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(`外电极 ${vOuter}V`, center.x, center.y - outerR - 4);
+        ctx.fillStyle = 'white';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${vInner}V`, center.x, center.y);
+
+        // Draw equipotential lines (measurement-driven)
+        if (document.getElementById('show-equipotential').checked) {
+            const colors = getEquipotentialColors(data.equipotentials.length);
+            data.equipotentials.forEach((eq, idx) => {
+                const V = eq.voltage;
+                if ((V <= Math.max(vInner, vOuter) && V >= Math.min(vInner, vOuter)) === false) return;
+
+                let r, hasMeasuredPoints;
+                if (eq.points.length > 0) {
+                    // Based on measured point distances from center
+                    const distances = eq.points.map(p => Math.sqrt((p.x - cx) ** 2 + (p.y - cy) ** 2));
+                    r = distances.reduce((a, b) => a + b, 0) / distances.length;
+                    hasMeasuredPoints = true;
+                } else {
+                    // Fallback to theoretical formula
+                    if (Math.abs(vOuter - vInner) < 0.001) {
+                        r = rInner;
+                    } else {
+                        r = rInner * Math.exp((V - vInner) / (vOuter - vInner) * Math.log(rOuter / rInner));
+                    }
+                    hasMeasuredPoints = false;
+                }
+
+                const sr = r * transform.scale;
+                ctx.strokeStyle = colors[idx];
+                ctx.lineWidth = 2;
+                ctx.setLineDash(hasMeasuredPoints ? [] : [6, 4]);
+                ctx.beginPath();
+                ctx.arc(center.x, center.y, sr, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Label
+                const angle = Math.PI / 4 + idx * 0.3;
+                const lx = center.x + sr * Math.cos(angle);
+                const ly = center.y - sr * Math.sin(angle);
+                ctx.fillStyle = colors[idx];
+                ctx.font = 'bold 11px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(`${V}V`, lx, ly - 2);
+            });
+        }
+
+        // Draw field lines (radial)
+        if (document.getElementById('show-fieldline').checked) {
+            const nLines = 16;
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([5, 5]);
+            for (let i = 0; i < nLines; i++) {
+                const angle = (i * 2 * Math.PI) / nLines;
+                const x1 = cx + rInner * Math.cos(angle);
+                const y1 = cy + rInner * Math.sin(angle);
+                const x2 = cx + rOuter * Math.cos(angle);
+                const y2 = cy + rOuter * Math.sin(angle);
+                const p1 = worldToScreen(x1, y1, transform);
+                const p2 = worldToScreen(x2, y2, transform);
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            }
+            ctx.setLineDash([]);
+
+            // Arrowheads on field lines
+            ctx.fillStyle = '#e74c3c';
+            for (let i = 0; i < nLines; i++) {
+                const angle = (i * 2 * Math.PI) / nLines;
+                const midR = (rInner + rOuter) / 2;
+                const xMid = cx + midR * Math.cos(angle);
+                const yMid = cy + midR * Math.sin(angle);
+                const pMid = worldToScreen(xMid, yMid, transform);
+                const dir = vInner > vOuter ? 1 : -1;
+                drawArrow(pMid.x, pMid.y, angle + (dir > 0 ? 0 : Math.PI), 6);
+            }
+        }
+
+        // Draw measured points
+        if (document.getElementById('show-points').checked) {
+            const colors = getEquipotentialColors(data.equipotentials.length);
+            data.equipotentials.forEach((eq, idx) => {
+                ctx.fillStyle = colors[idx];
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 1.5;
+                eq.points.forEach(pt => {
+                    const p = worldToScreen(pt.x, pt.y, transform);
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                });
+            });
+        }
+
+        return transform;
+    }
+
+    // ==================== Parallel Drawing ====================
+    function drawParallel() {
+        const xLeft = parseFloat(document.getElementById('px-left').value) || -40;
+        const xRight = parseFloat(document.getElementById('px-right').value) || 40;
+        const yStart = parseFloat(document.getElementById('py-start').value) || -60;
+        const yEnd = parseFloat(document.getElementById('py-end').value) || 60;
+        const vLeft = parseFloat(document.getElementById('pv-left').value) || 10;
+        const vRight = parseFloat(document.getElementById('pv-right').value) || 0;
+        const data = parallelData;
+
+        const width = Math.abs(xRight - xLeft);
+        const height = Math.abs(yEnd - yStart);
+        const margin = Math.max(width * 0.15, height * 0.15, 10);
+        const bounds = {
+            xmin: Math.min(xLeft, xRight) - margin,
+            xmax: Math.max(xLeft, xRight) + margin,
+            ymin: Math.min(yStart, yEnd) - margin,
+            ymax: Math.max(yStart, yEnd) + margin
+        };
+
+        const padding = { top: 30, right: 40, bottom: 40, left: 50 };
+        const transform = computeTransform(bounds, padding);
+
+        // Background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        drawGrid(transform, bounds);
+        drawAxes(transform, bounds);
+
+        // Draw electrodes (rectangles)
+        const pLeftTop = worldToScreen(xLeft, yEnd, transform);
+        const pLeftBottom = worldToScreen(xLeft, yStart, transform);
+        const pRightTop = worldToScreen(xRight, yEnd, transform);
+        const pRightBottom = worldToScreen(xRight, yStart, transform);
+        const plateWidth = 4;
+
+        // Left plate
+        ctx.fillStyle = '#34495e';
+        ctx.fillRect(pLeftTop.x - plateWidth, pLeftTop.y, plateWidth * 2, pLeftBottom.y - pLeftTop.y);
+        ctx.strokeStyle = '#2c3e50';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(pLeftTop.x - plateWidth, pLeftTop.y, plateWidth * 2, pLeftBottom.y - pLeftTop.y);
+
+        // Right plate
+        ctx.fillRect(pRightTop.x - plateWidth, pRightTop.y, plateWidth * 2, pRightBottom.y - pRightTop.y);
+        ctx.strokeRect(pRightTop.x - plateWidth, pRightTop.y, plateWidth * 2, pRightBottom.y - pRightTop.y);
+
+        // Labels
+        ctx.fillStyle = '#2c3e50';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(`左极板 ${vLeft}V`, (pLeftTop.x + pLeftBottom.x) / 2, pLeftTop.y - 4);
+        ctx.fillText(`右极板 ${vRight}V`, (pRightTop.x + pRightBottom.x) / 2, pRightTop.y - 4);
+
+        // Draw theoretical equipotential lines
+        if (document.getElementById('show-equipotential').checked) {
+            const colors = getEquipotentialColors(data.equipotentials.length);
+            data.equipotentials.forEach((eq, idx) => {
+                const V = eq.voltage;
+                if ((V <= Math.max(vLeft, vRight) && V >= Math.min(vLeft, vRight)) === false) return;
+
+                let xLine;
+                const hasPoints = eq.points.length > 0;
+                if (hasPoints) {
+                    const xAvg = eq.points.reduce((sum, p) => sum + p.x, 0) / eq.points.length;
+                    xLine = xAvg;
+                } else {
+                    if (Math.abs(vRight - vLeft) < 0.001) {
+                        xLine = xLeft;
+                    } else {
+                        xLine = xLeft + (V - vLeft) / (vRight - vLeft) * (xRight - xLeft);
+                    }
+                }
+
+                const p1 = worldToScreen(xLine, bounds.ymin, transform);
+                const p2 = worldToScreen(xLine, bounds.ymax, transform);
+
+                ctx.strokeStyle = colors[idx];
+                ctx.lineWidth = 2;
+                ctx.setLineDash(hasPoints ? [] : [6, 4]);
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+
+                // Label
+                const ly = p1.y + (p2.y - p1.y) * 0.15 + idx * 18;
+                ctx.fillStyle = colors[idx];
+                ctx.font = 'bold 11px sans-serif';
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(`${V}V`, p1.x + 4, ly);
+            });
+        }
+
+        // Draw field lines (horizontal)
+        if (document.getElementById('show-fieldline').checked) {
+            const nLines = 12;
+            const yStep = (yEnd - yStart) / (nLines + 1);
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([5, 5]);
+            for (let i = 1; i <= nLines; i++) {
+                const yLine = yStart + i * yStep;
+                const p1 = worldToScreen(xLeft, yLine, transform);
+                const p2 = worldToScreen(xRight, yLine, transform);
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            }
+            ctx.setLineDash([]);
+
+            // Arrowheads
+            ctx.fillStyle = '#e74c3c';
+            for (let i = 1; i <= nLines; i++) {
+                const yLine = yStart + i * yStep;
+                const xMid = (xLeft + xRight) / 2;
+                const pMid = worldToScreen(xMid, yLine, transform);
+                const dir = vLeft > vRight ? 0 : Math.PI;
+                drawArrow(pMid.x, pMid.y, dir, 6);
+            }
+        }
+
+        // Draw measured points
+        if (document.getElementById('show-points').checked) {
+            const colors = getEquipotentialColors(data.equipotentials.length);
+            data.equipotentials.forEach((eq, idx) => {
+                ctx.fillStyle = colors[idx];
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 1.5;
+                eq.points.forEach(pt => {
+                    const p = worldToScreen(pt.x, pt.y, transform);
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                });
+            });
+        }
+
+        return transform;
+    }
+
+    // ==================== Parallel Reference Drawing ====================
+    function drawParallelReference() {
+        const xLeft = parseFloat(document.getElementById('px-left').value) || -40;
+        const xRight = parseFloat(document.getElementById('px-right').value) || 40;
+        const yStart = parseFloat(document.getElementById('py-start').value) || -60;
+        const yEnd = parseFloat(document.getElementById('py-end').value) || 60;
+        const vLeft = parseFloat(document.getElementById('pv-left').value) || 0;
+        const vRight = parseFloat(document.getElementById('pv-right').value) || 10;
+        const data = parallelData;
+
+        const qPos = { x: xRight, y: (yStart + yEnd) / 2 };
+        const qNeg = { x: xLeft, y: (yStart + yEnd) / 2 };
+        const d = Math.abs(xRight - xLeft);
+        const Q = Math.max(Math.abs(vRight - vLeft), 0.1);
+
+        const margin = d * 0.8;
+        const bounds = {
+            xmin: Math.min(xLeft, xRight) - margin,
+            xmax: Math.max(xLeft, xRight) + margin,
+            ymin: Math.min(yStart, yEnd) - margin,
+            ymax: Math.max(yStart, yEnd) + margin
+        };
+        const pad = { top: 30, right: 40, bottom: 40, left: 50 };
+        const transform = computeTransform(bounds, pad);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        drawGrid(transform, bounds);
+        drawAxes(transform, bounds);
+
+        function eField(x, y) {
+            const dx1 = x - qPos.x, dy1 = y - qPos.y;
+            const dx2 = x - qNeg.x, dy2 = y - qNeg.y;
+            const r1c = dx1*dx1 + dy1*dy1;
+            const r2c = dx2*dx2 + dy2*dy2;
+            const r1 = Math.sqrt(r1c);
+            const r2 = Math.sqrt(r2c);
+            const Ex = dx1/(r1*r1c) - dx2/(r2*r2c);
+            const Ey = dy1/(r1*r1c) - dy2/(r2*r2c);
+            return { Ex, Ey, E: Math.sqrt(Ex*Ex + Ey*Ey), r1, r2 };
+        }
+
+        // ===== Equipotential circles driven by student data =====
+        const colors = getEquipotentialColors(data.equipotentials.length);
+
+        data.equipotentials.forEach((eq, idx) => {
+            const V = eq.voltage;
+            const distPos = Math.abs(V - vRight);
+            const distNeg = Math.abs(V - vLeft);
+
+            ctx.strokeStyle = colors[idx];
+            ctx.lineWidth = 2;
+
+            // Circle around positive charge (right)
+            let rPos = 0.12 * d * (1 - distPos / Q);
+            if (rPos < 0.03 * d) rPos = 0.03 * d;
+            if (rPos > 0.5 * d) rPos = 0.5 * d;
+            ctx.beginPath();
+            const cPos = worldToScreen(qPos.x, qPos.y, transform);
+            ctx.arc(cPos.x, cPos.y, rPos * transform.scale, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Circle around negative charge (left)
+            let rNeg = 0.12 * d * (1 - distNeg / Q);
+            if (rNeg < 0.03 * d) rNeg = 0.03 * d;
+            if (rNeg > 0.5 * d) rNeg = 0.5 * d;
+            ctx.beginPath();
+            const cNeg = worldToScreen(qNeg.x, qNeg.y, transform);
+            ctx.arc(cNeg.x, cNeg.y, rNeg * transform.scale, 0, Math.PI * 2);
+            ctx.stroke();
+        });
+
+        // ===== Field lines =====
+        ctx.strokeStyle = '#1a5276';
+        ctx.lineWidth = 1.2;
+
+        function traceFieldLine(startAngle) {
+            const startR = d * 0.025;
+            let x = qPos.x + startR * Math.cos(startAngle);
+            let y = qPos.y + startR * Math.sin(startAngle);
+            const step = d * 0.003;
+            const maxSteps = 1500;
+            const points = [{x, y}];
+
+            for (let i = 0; i < maxSteps; i++) {
+                const f = eField(x, y);
+                if (f.r2 < startR) {
+                    points.push({x: qNeg.x, y: qNeg.y});
+                    break;
+                }
+                if (f.E < 1e-6) break;
+                const dxToPos = x - qPos.x, dyToPos = y - qPos.y;
+                const dxToNeg = x - qNeg.x, dyToNeg = y - qNeg.y;
+                if (dxToPos*dxToPos + dyToPos*dyToPos > d*d*4) break;
+                x += step * f.Ex / f.E;
+                y += step * f.Ey / f.E;
+                points.push({x, y});
+            }
+            return points;
+        }
+
+        // Field lines from positive charge
+        const nFieldLines = 20;
+        for (let i = 0; i < nFieldLines; i++) {
+            const angle = (i / nFieldLines) * 2 * Math.PI;
+            const pts = traceFieldLine(angle);
+            if (pts.length < 5) continue;
+
+            ctx.beginPath();
+            const p0 = worldToScreen(pts[0].x, pts[0].y, transform);
+            ctx.moveTo(p0.x, p0.y);
+            for (let j = 1; j < pts.length; j++) {
+                const p = worldToScreen(pts[j].x, pts[j].y, transform);
+                ctx.lineTo(p.x, p.y);
+            }
+            ctx.stroke();
+
+            const midIdx = Math.floor(pts.length * 0.5);
+            if (midIdx > 3 && midIdx < pts.length - 3) {
+                const p1 = pts[midIdx - 3];
+                const p2 = pts[midIdx + 3];
+                const ang = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+                const sp = worldToScreen(pts[midIdx].x, pts[midIdx].y, transform);
+                drawArrow(sp.x, sp.y, ang, 7);
+            }
+        }
+
+        // Supplementary field lines from infinity to negative charge (left side)
+        function traceFieldLineFromNeg(startAngle) {
+            const startR = d * 0.025;
+            let x = qNeg.x + startR * Math.cos(startAngle);
+            let y = qNeg.y + startR * Math.sin(startAngle);
+            const step = d * 0.003;
+            const maxSteps = 1500;
+            const points = [{x, y}];
+
+            for (let i = 0; i < maxSteps; i++) {
+                const f = eField(x, y);
+                if (f.E < 1e-6) break;
+                // Move against E-field direction (from infinity toward negative charge)
+                x -= step * f.Ex / f.E;
+                y -= step * f.Ey / f.E;
+                points.push({x, y});
+
+                const dxToNeg = x - qNeg.x, dyToNeg = y - qNeg.y;
+                if (dxToNeg*dxToNeg + dyToNeg*dyToNeg > d*d*4) break;
+            }
+            return points;
+        }
+
+        const nLinesNeg = 10;
+        for (let i = 0; i < nLinesNeg; i++) {
+            const angle = Math.PI * 0.5 + (i / nLinesNeg) * Math.PI;
+            const pts = traceFieldLineFromNeg(angle);
+            if (pts.length < 5) continue;
+
+            ctx.beginPath();
+            const p0 = worldToScreen(pts[0].x, pts[0].y, transform);
+            ctx.moveTo(p0.x, p0.y);
+            for (let j = 1; j < pts.length; j++) {
+                const p = worldToScreen(pts[j].x, pts[j].y, transform);
+                ctx.lineTo(p.x, p.y);
+            }
+            ctx.stroke();
+
+            const midIdx = Math.floor(pts.length * 0.5);
+            if (midIdx > 3 && midIdx < pts.length - 3) {
+                const p1 = pts[midIdx - 3];
+                const p2 = pts[midIdx + 3];
+                // Arrow points toward negative charge (opposite to tracking direction)
+                const ang = Math.atan2(p1.y - p2.y, p1.x - p2.x);
+                const sp = worldToScreen(pts[midIdx].x, pts[midIdx].y, transform);
+                drawArrow(sp.x, sp.y, ang, 7);
+            }
+        }
+
+        // ===== Charges =====
+        const pPos = worldToScreen(qPos.x, qPos.y, transform);
+        ctx.fillStyle = '#f1c40f';
+        ctx.beginPath();
+        ctx.arc(pPos.x, pPos.y, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#d4ac0d';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = '#2c3e50';
+        ctx.font = 'bold 16px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('+', pPos.x, pPos.y);
+
+        const pNeg = worldToScreen(qNeg.x, qNeg.y, transform);
+        ctx.fillStyle = '#f1c40f';
+        ctx.beginPath();
+        ctx.arc(pNeg.x, pNeg.y, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#2c3e50';
+        ctx.fillText('-', pNeg.x, pNeg.y);
+
+        // ===== Measured points =====
+        if (document.getElementById('show-points').checked) {
+            data.equipotentials.forEach((eq, idx) => {
+                ctx.fillStyle = colors[idx];
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 1.5;
+                eq.points.forEach(pt => {
+                    const p = worldToScreen(pt.x, pt.y, transform);
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                });
+            });
+        }
+    }
+
+    function drawArrow(x, y, angle, size) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-size, -size / 2);
+        ctx.lineTo(-size, size / 2);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function renderAnalysis() {
+        const section = document.getElementById('analysis-section');
+        const container = document.getElementById('analysis-container');
+        const data = getData();
+        const validEqs = data.equipotentials.filter(eq => eq.points.length > 0);
+        
+        if (validEqs.length === 0) {
+            container.innerHTML = '<div class="empty-state">暂无有效测量数据，请先添加等势线和测量点</div>';
+            return;
+        }
+
+        let html = '<table class="analysis-table"><thead><tr>';
+        if (currentMode === 'coaxial') {
+            html += '<th>电压(V)</th><th>理论半径(mm)</th><th>实测平均半径(mm)</th><th>相对误差</th></tr></thead><tbody>';
+            
+            const cx = parseFloat(document.getElementById('cx-center').value) || 0;
+            const cy = parseFloat(document.getElementById('cy-center').value) || 0;
+            const rInner = parseFloat(document.getElementById('r-inner').value) || 10;
+            const rOuter = parseFloat(document.getElementById('r-outer').value) || 50;
+            const vInner = parseFloat(document.getElementById('v-inner').value) || 10;
+            const vOuter = parseFloat(document.getElementById('v-outer').value) || 0;
+
+            validEqs.forEach(eq => {
+                const V = eq.voltage;
+                let rTheory;
+                if (Math.abs(vOuter - vInner) < 0.001) {
+                    rTheory = rInner;
+                } else {
+                    rTheory = rInner * Math.exp((V - vInner) / (vOuter - vInner) * Math.log(rOuter / rInner));
+                }
+                const rValues = eq.points.map(p => Math.sqrt((p.x - cx)**2 + (p.y - cy)**2));
+                const rAvg = rValues.reduce((a,b) => a+b, 0) / rValues.length;
+                const error = Math.abs(rAvg - rTheory) / rTheory * 100;
+                const errorClass = error < 3 ? 'error-good' : (error < 8 ? 'error-medium' : 'error-high');
+                html += `<tr><td>${V.toFixed(1)}</td><td>${rTheory.toFixed(2)}</td><td>${rAvg.toFixed(2)}</td><td class="${errorClass}">${error.toFixed(1)}%</td></tr>`;
+            });
+        } else {
+            html += '<th>电压(V)</th><th>理论X(mm)</th><th>实测平均X(mm)</th><th>相对误差</th></tr></thead><tbody>';
+            
+            const xLeft = parseFloat(document.getElementById('px-left').value) || -40;
+            const xRight = parseFloat(document.getElementById('px-right').value) || 40;
+            const vLeft = parseFloat(document.getElementById('pv-left').value) || 10;
+            const vRight = parseFloat(document.getElementById('pv-right').value) || 0;
+            const d = Math.abs(xRight - xLeft);
+
+            validEqs.forEach(eq => {
+                const V = eq.voltage;
+                let xTheory;
+                if (Math.abs(vRight - vLeft) < 0.001) {
+                    xTheory = xLeft;
+                } else {
+                    xTheory = xLeft + (V - vLeft) / (vRight - vLeft) * (xRight - xLeft);
+                }
+                const xValues = eq.points.map(p => p.x);
+                const xAvg = xValues.reduce((a,b) => a+b, 0) / xValues.length;
+                const error = Math.abs(xAvg - xTheory) / d * 100;
+                const errorClass = error < 3 ? 'error-good' : (error < 8 ? 'error-medium' : 'error-high');
+                html += `<tr><td>${V.toFixed(1)}</td><td>${xTheory.toFixed(2)}</td><td>${xAvg.toFixed(2)}</td><td class="${errorClass}">${error.toFixed(1)}%</td></tr>`;
+            });
+        }
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    function generatePlot() {
+        if (currentMode === 'coaxial') {
+            drawCoaxial();
+        } else {
+            if (parallelViewMode === 'reference') {
+                drawParallelReference();
+            } else {
+                drawParallel();
+            }
+        }
+        updateLegend();
+        renderAnalysis();
+    }
+
+    function updateLegend() {
+        const container = document.getElementById('legend-container');
+        
+        if (currentMode === 'parallel' && parallelViewMode === 'reference') {
+            container.innerHTML = `
+                <div class="legend-item"><div class="legend-color" style="background:#f1c40f; height:12px; width:12px; border-radius:50%;"></div><span>正电荷 (+q)</span></div>
+                <div class="legend-item"><div class="legend-color" style="background:#f1c40f; height:12px; width:12px; border-radius:50%;"></div><span>负电荷 (-q)</span></div>
+                <div class="legend-item"><div class="legend-color" style="background:#1a5276; height:2px;"></div><span>电力线</span></div>
+                <div class="legend-item"><div class="legend-color" style="background:#27ae60; height:2px;"></div><span>等势线</span></div>
+            `;
+            return;
+        }
+        
+        const data = getData();
+        const colors = getEquipotentialColors(data.equipotentials.length);
+
+        let html = `
+            <div class="legend-item"><div class="legend-color" style="background:#2c3e50; height:2px;"></div><span>电极边界</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#e74c3c; height:2px;"></div><span>电力线</span></div>
+        `;
+
+        if (currentMode === 'parallel' || currentMode === 'coaxial') {
+            html += `<div class="legend-item"><div class="legend-color" style="background:#666; height:2px;"></div><span>实线 = 基于实测点</span></div>`;
+            html += `<div class="legend-item"><div class="legend-color" style="background:#666; height:2px; border-top:2px dashed #666;"></div><span>虚线 = 基于理论公式</span></div>`;
+        }
+
+        data.equipotentials.forEach((eq, idx) => {
+            html += `<div class="legend-item"><div class="legend-dot" style="background:${colors[idx]}; border:1px solid #fff;"></div><span>${eq.voltage}V 等势线</span></div>`;
+        });
+
+        container.innerHTML = html;
+    }
+
+    function downloadImage() {
+        // Create a titled version for download
+        const titleHeight = 42;
+        const titleCanvas = document.createElement('canvas');
+        titleCanvas.width = canvas.width;
+        titleCanvas.height = canvas.height + titleHeight;
+        const tCtx = titleCanvas.getContext('2d');
+        
+        // White background
+        tCtx.fillStyle = '#ffffff';
+        tCtx.fillRect(0, 0, titleCanvas.width, titleCanvas.height);
+        
+        // Header bar
+        tCtx.fillStyle = '#1a5276';
+        tCtx.fillRect(0, 0, titleCanvas.width, titleHeight);
+        
+        // Title text
+        tCtx.fillStyle = '#ffffff';
+        tCtx.font = 'bold 16px "Segoe UI", "Microsoft YaHei", sans-serif';
+        tCtx.textAlign = 'left';
+        tCtx.textBaseline = 'middle';
+        const modeText = currentMode === 'coaxial' ? '同轴电极静电场模拟' : '平行电极静电场模拟';
+        tCtx.fillText(`${modeText}  —  ${new Date().toLocaleDateString('zh-CN')}`, 20, titleHeight / 2);
+        
+        // Original image
+        tCtx.drawImage(canvas, 0, titleHeight);
+        
+        const link = document.createElement('a');
+        link.download = `静电场模拟_${currentMode === 'coaxial' ? '同轴电极' : '平行电极'}_${new Date().toISOString().slice(0,10)}.png`;
+        link.href = titleCanvas.toDataURL('image/png');
+        link.click();
+    }
+
+    // ==================== Initialization ====================
+    renderEquipotentials();
+    generatePlot();
+    </script>
+</body>
+</html>
