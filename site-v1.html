@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>静电场实验室 - 静电场模拟描绘实验</title>
+<style>
+  :root {
+    --primary: #2563EB;
+    --primary-dark: #1E40AF;
+    --primary-light: #3B82F6;
+    --dark: #0F172A;
+    --text: #334155;
+    --text-secondary: #64748B;
+    --bg: #F8FAFC;
+    --card: #FFFFFF;
+    --border: #E2E8F0;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --error: #EF4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+  }
+
+  h1 { font-size: 28px; font-weight: 700; }
+  h2 { font-size: 20px; font-weight: 600; }
+  h3 { font-size: 16px; font-weight: 600; }
+
+  a { color: var(--primary); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Navbar */
+  .navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 1000;
+    transition: box-shadow 0.2s;
+  }
+  .navbar.scrolled { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+  .nav-left, .nav-center, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--dark);
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 18px;
+  }
+
+  .nav-link {
+    padding: 6px 12px;
+    border-radius: 5px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .nav-link:hover { background: var(--bg); color: var(--text); text-decoration: none; }
+  .nav-link.active { color: var(--primary); background: #EFF6FF; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-primary:active { transform: translateY(1px); }
+  .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--bg); border-color: var(--text-secondary); }
+  .btn-white { background: #fff; color: var(--primary); }
+  .btn-white:hover { background: #EFF6FF; }
+  .btn-ghost { background: transparent; color: var(--text-secondary); }
+  .btn-ghost:hover { background: var(--bg); color: var(--text); }
+  .btn-sm { padding: 6px 12px; font-size: 13px; }
+  .btn-icon { width: 32px; height: 32px; padding: 0; border-radius: 5px; }
+
+  /* Main content offset for fixed navbar */
+  .main { padding-top: 56px; }
+
+  /* Section base */
+  .section { min-height: 100vh; }
+  .section:not(#home) { padding: 24px 16px; }
+
+  /* Home Hero */
+  .hero {
+    background: linear-gradient(135deg, #1E3A5F, var(--primary));
+    color: #fff;
+    text-align: center;
+    padding: 80px 16px 100px;
+    position: relative;
+  }
+  .hero h1 { margin-bottom: 12px; }
+  .hero p { font-size: 16px; opacity: 0.9; margin-bottom: 24px; }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .scroll-arrow {
+    position: absolute;
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    animation: bounce 2s infinite;
+    opacity: 0.7;
+    cursor: pointer;
+  }
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+    40% { transform: translateX(-50%) translateY(8px); }
+    60% { transform: translateX(-50%) translateY(4px); }
+  }
+
+  /* Steps */
+  .steps-section { background: var(--card); padding: 48px 16px; }
+  .container { max-width: 960px; margin: 0 auto; }
+  .section-title { text-align: center; margin-bottom: 24px; }
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .step-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px 16px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .step-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }
+  .step-icon {
+    width: 48px; height: 48px;
+    background: #EFF6FF;
+    color: var(--primary);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 12px;
+  }
+  .step-card h3 { margin-bottom: 8px; color: var(--dark); }
+  .step-card p { color: var(--text-secondary); font-size: 13px; }
+
+  /* Features */
+  .features-section { background: var(--bg); padding: 48px 16px; }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .feature-card {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: box-shadow 0.2s;
+  }
+  .feature-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .feature-icon { font-size: 24px; margin-bottom: 10px; }
+  .feature-card h3 { margin-bottom: 6px; color: var(--dark); }
+  .feature-card p { color: var(--text-secondary); font-size: 13px; line-height: 1.5; }
+
+  /* Footer */
+  .footer {
+    background: var(--dark);
+    color: #94A3B8;
+    text-align: center;
+    padding: 24px 16px;
+    font-size: 13px;
+  }
+
+  /* Lab Section */
+  .lab-topbar {
+    position: sticky;
+    top: 56px;
+    z-index: 900;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .lab-topbar-left, .lab-topbar-right { display: flex; align-items: center; gap: 12px; }
+  .tab-group { display: flex; background: var(--bg); border-radius: 5px; padding: 3px; gap: 3px; }
+  .tab-btn {
+    padding: 6px 14px;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .tab-btn.active { background: var(--card); color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.08); font-weight: 500; }
+  .tab-btn:hover:not(.active) { color: var(--text); }
+
+  .lab-body { display: flex; height: calc(100vh - 56px - 49px); }
+
+  .lab-sidebar {
+    width: 400px;
+    min-width: 320px;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sidebar-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .sidebar-card-header {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+  .sidebar-card-header.no-toggle { cursor: default; }
+  .sidebar-card-body { padding: 12px 14px; }
+  .toggle-icon { margin-left: auto; transition: transform 0.2s; font-size: 12px; color: var(--text-secondary); }
+  .sidebar-card.collapsed .toggle-icon { transform: rotate(-90deg); }
+  .sidebar-card.collapsed .sidebar-card-body { display: none; }
+
+  .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  .form-group { flex: 1; }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+
+  .equip-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .equip-header {
+    padding: 10px 12px;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .equip-header .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .equip-header .equip-title { flex: 1; font-weight: 500; }
+  .equip-header .equip-meta { font-size: 12px; color: var(--text-secondary); }
+  .equip-body { padding: 10px 12px; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table th, .data-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  .data-table th { color: var(--text-secondary); font-weight: 500; font-size: 12px; background: var(--bg); }
+  .data-table tr:last-child td { border-bottom: none; }
+
+  .error-low { color: var(--success); font-weight: 500; }
+  .error-mid { color: var(--warning); font-weight: 500; }
+  .error-high { color: var(--error); font-weight: 500; }
+
+  .canvas-area {
+    flex: 1;
+    background: #F1F5F9;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .canvas-wrapper {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 14 / 11;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  canvas { width: 100%; height: 100%; display: block; }
+
+  .canvas-tools {
+    position: absolute;
+    bottom: 16px; right: 16px;
+    display: flex;
+    gap: 6px;
+    background: var(--card);
+    padding: 4px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .legend-bar {
+    position: absolute;
+    bottom: 16px; left: 16px; right: 100px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--card);
+    padding: 8px 12px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 12px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-line { width: 20px; height: 0; border-top: 2px solid; }
+  .legend-line.dashed { border-top-style: dashed; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .toast-area {
+    position: fixed;
+    top: 72px; right: 16px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+  }
+  .toast {
+    background: var(--card);
+    border-left: 4px solid var(--primary);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 12px 16px;
+    border-radius: 0 5px 5px 0;
+    font-size: 13px;
+    min-width: 240px;
+    animation: slideIn 0.3s ease-out;
+    pointer-events: auto;
+  }
+  .toast.toast-success { border-left-color: var(--success); }
+  .toast.toast-warning { border-left-color: var(--warning); }
+  .toast.toast-error { border-left-color: var(--error); }
+  .toast.toast-info { border-left-color: var(--primary); }
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  .toast-panel {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1100;
+    display: flex; flex-direction: column; gap: 6px;
+    font-size: 12px;
+  }
+  .toast-panel-title { font-weight: 600; margin-bottom: 4px; color: var(--dark); }
+
+  /* Help */
+  .help-layout { display: flex; gap: 24px; max-width: 1000px; margin: 0 auto; }
+  .help-nav {
+    width: 240px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 80px;
+    align-self: flex-start;
+  }
+  .help-nav ul { list-style: none; }
+  .help-nav li a {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 5px;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+  .help-nav li a:hover, .help-nav li a.active {
+    background: #EFF6FF;
+    color: var(--primary);
+    text-decoration: none;
+  }
+  .help-content { flex: 1; }
+  .help-content section { margin-bottom: 32px; }
+  .help-content h2 { margin-bottom: 12px; color: var(--dark); }
+  .help-content p { margin-bottom: 10px; color: var(--text); }
+  .help-content ul { margin-left: 20px; margin-bottom: 10px; }
+  .help-content li { margin-bottom: 6px; }
+  .kbd-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  .kbd-table th, .kbd-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .kbd-table th { background: var(--bg); color: var(--text-secondary); font-weight: 500; }
+  kbd {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .back-top {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s, transform 0.2s;
+    z-index: 900;
+    font-size: 16px;
+  }
+  .back-top.visible { opacity: 1; pointer-events: auto; }
+  .back-top:hover { transform: translateY(-2px); }
+
+  @media (max-width: 860px) {
+    .lab-sidebar { width: 100%; min-width: unset; border-right: none; border-bottom: 1px solid var(--border); max-height: 50vh; }
+    .lab-body { flex-direction: column; height: auto; }
+    .canvas-wrapper { aspect-ratio: 14/11; }
+    .help-layout { flex-direction: column; }
+    .help-nav { width: 100%; position: static; }
+    .nav-center { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <div class="nav-left">
+    <a href="#home" class="logo" onclick="switchPage('home')">
+      <span class="logo-icon">⚡</span>
+      <span>静电场实验室</span>
+    </a>
+  </div>
+  <div class="nav-center">
+    <a href="#home" class="nav-link active" data-page="home" onclick="switchPage('home')">首页</a>
+    <a href="#lab" class="nav-link" data-page="lab" onclick="switchPage('lab')">实验</a>
+    <a href="#help" class="nav-link" data-page="help" onclick="switchPage('help')">帮助</a>
+  </div>
+  <div class="nav-right">
+    <a href="#lab" class="btn btn-primary" onclick="switchPage('lab')">开始实验</a>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- ==================== HOME ==================== -->
+  <section class="section" id="home">
+    <div class="hero">
+      <h1>静电场模拟描绘实验</h1>
+      <p>基于实测数据的高精度电场可视化工具</p>
+      <div class="hero-actions">
+        <a href="#lab" class="btn btn-white" onclick="setMode('coaxial'); switchPage('lab')">同轴电极实验</a>
+        <a href="#lab" class="btn btn-white" onclick="setMode('parallel'); switchPage('lab')">平行电极实验</a>
+      </div>
+      <div class="scroll-arrow" onclick="document.getElementById('steps').scrollIntoView({behavior:'smooth'})">↓</div>
+    </div>
+
+    <div class="steps-section" id="steps">
+      <div class="container">
+        <h2 class="section-title">三步完成实验</h2>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-icon">⚙️</div>
+            <h3>设置参数</h3>
+            <p>输入电极几何参数和电压</p>
+          </div>
+          <div class="step-card">
+            <div class="step-icon">📝</div>
+            <h3>录入数据</h3>
+            <p>添加等势线并输入测量坐标</p>
+          </div>
+          <div class="step-card">
+            <div class="step-icon">📊</div>
+            <h3>生成图像</h3>
+            <p>自动绘制等势线、电力线和误差分析</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="features-section">
+      <div class="container">
+        <h2 class="section-title">功能特性</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>实时计算</h3>
+            <p>输入即时更新，无需等待，随时查看电场变化趋势。</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔀</div>
+            <h3>双模式支持</h3>
+            <p>同轴 + 平行电极，覆盖大学物理经典静电场实验。</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📐</div>
+            <h3>误差分析</h3>
+            <p>理论值 vs 实测值对比，自动计算相对误差百分比。</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🖼️</div>
+            <h3>高清导出</h3>
+            <p>一键下载 PNG 图像，方便插入实验报告和论文。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>静电场实验室 &copy; 2026. 仅供教学演示使用。</p>
+    </div>
+  </section>
+
+  <!-- ==================== LAB ==================== -->
+  <section class="section" id="lab" style="display:none;">
+    <div class="lab-topbar">
+      <div class="lab-topbar-left">
+        <a href="#home" class="btn btn-ghost btn-sm" onclick="switchPage('home')">← 返回首页</a>
+        <span style="font-weight:600; color: var(--dark);">静电场模拟实验</span>
+      </div>
+      <div class="tab-group">
+        <button class="tab-btn active" data-mode="coaxial" onclick="setMode('coaxial')">同轴电极</button>
+        <button class="tab-btn" data-mode="parallel" onclick="setMode('parallel')">平行电极</button>
+      </div>
+      <div class="lab-topbar-right">
+        <button class="btn btn-secondary btn-sm" onclick="showToast('导出图片', '图片已保存至本地。', 'info')">导出图像</button>
+        <button class="btn btn-icon btn-ghost" title="设置">⚙️</button>
+      </div>
+    </div>
+
+    <div class="lab-body">
+      <!-- Sidebar -->
+      <div class="lab-sidebar">
+        <!-- Electrode Params -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-header no-toggle">
+            <span>📐</span>
+            <span>电极参数</span>
+          </div>
+          <div class="sidebar-card-body" id="params-body">
+            <!-- Coaxial params -->
+            <div id="params-coaxial">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>圆心 X (cm)</label>
+                  <input type="number" value="0" step="0.1">
+                </div>
+                <div class="form-group">
+                  <label>圆心 Y (cm)</label>
+                  <input type="number" value="0" step="0.1">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>内半径 r₁ (cm)</label>
+                  <input type="number" value="2.0" step="0.1">
+                </div>
+                <div class="form-group">
+                  <label>外半径 r₂ (cm)</label>
+                  <input type="number" value="8.0" step="0.1">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>内电压 V₁ (V)</label>
+                  <input type="number" value="10.0" step="0.1">
+                </div>
+                <div class="form-group">
+                  <label>外电压 V₂ (V)</label>
+                  <input type="number" value="0.0" step="0.1">
+                </div>
+              </div>
+            </div>
+            <!-- Parallel params -->
+            <div id="params-parallel" style="display:none;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>左极板 X (cm)</label>
+                  <input type="number" value="-6" step="0.1">
+                </div>
+                <div class="form-group">
+                  <label>右极板 X (cm)</label>
+                  <input type="number" value="6" step="0.1">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Y 起点 (cm)</label>
+                  <input type="number" value="-6" step="0.1">
+                </div>
+                <div class="form-group">
+                  <label>Y 终点 (cm)</label>
+                  <input type="number" value="6" step="0.1">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>左电压 Vₗ (V)</label>
+                  <input type="number" value="10.0" step="0.1">
+                </div>
+                <div class="form-group">
+                  <label>右电压 Vᵣ (V)</label>
+                  <input type="number" value="0.0" step="0.1">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Equipotential Data -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-header no-toggle">
+            <span>📊</span>
+            <span>等势线数据</span>
+          </div>
+          <div class="sidebar-card-body">
+            <div id="equip-list">
+              <!-- 5V equipotential -->
+              <div class="equip-card">
+                <div class="equip-header" onclick="toggleEquip(this)">
+                  <span class="dot" style="background:#EF4444;"></span>
+                  <span class="equip-title">5.0 V 等势线</span>
+                  <span class="equip-meta">4 个测量点</span>
+                  <span class="toggle-icon">▼</span>
+                </div>
+                <div class="equip-body">
+                  <table class="data-table">
+                    <thead><tr><th>X (cm)</th><th>Y (cm)</th></tr></thead>
+                    <tbody>
+                      <tr><td>3.2</td><td>0.0</td></tr>
+                      <tr><td>0.0</td><td>3.2</td></tr>
+                      <tr><td>-3.2</td><td>0.0</td></tr>
+                      <tr><td>0.0</td><td>-3.2</td></tr>
+                    </tbody>
+                  </table>
+                  <div style="display:flex; gap:6px; margin-top:8px;">
+                    <button class="btn btn-secondary btn-sm" style="flex:1;">+ 添加点</button>
+                    <button class="btn btn-ghost btn-sm">删除</button>
+                  </div>
+                </div>
+              </div>
+              <!-- 2.5V equipotential -->
+              <div class="equip-card">
+                <div class="equip-header" onclick="toggleEquip(this)">
+                  <span class="dot" style="background:#F59E0B;"></span>
+                  <span class="equip-title">2.5 V 等势线</span>
+                  <span class="equip-meta">4 个测量点</span>
+                  <span class="toggle-icon">▼</span>
+                </div>
+                <div class="equip-body">
+                  <table class="data-table">
+                    <thead><tr><th>X (cm)</th><th>Y (cm)</th></tr></thead>
+                    <tbody>
+                      <tr><td>5.5</td><td>0.0</td></tr>
+                      <tr><td>0.0</td><td>5.5</td></tr>
+                      <tr><td>-5.5</td><td>0.0</td></tr>
+                      <tr><td>0.0</td><td>-5.5</td></tr>
+                    </tbody>
+                  </table>
+                  <div style="display:flex; gap:6px; margin-top:8px;">
+                    <button class="btn btn-secondary btn-sm" style="flex:1;">+ 添加点</button>
+                    <button class="btn btn-ghost btn-sm">删除</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" style="width:100%; margin-top:6px;" onclick="showToast('添加等势线', '请在画布上点击以添加新的等势线点。', 'info')">+ 添加等势线</button>
+          </div>
+        </div>
+
+        <!-- Data Analysis -->
+        <div class="sidebar-card collapsed" id="analysis-card">
+          <div class="sidebar-card-header" onclick="toggleCard('analysis-card')">
+            <span>📈</span>
+            <span>数据分析</span>
+            <span class="toggle-icon">▼</span>
+          </div>
+          <div class="sidebar-card-body">
+            <table class="data-table">
+              <thead>
+                <tr><th>电压 (V)</th><th>理论位置</th><th>实测位置</th><th>误差 %</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>5.0</td><td>3.15 cm</td><td>3.20 cm</td><td class="error-low">1.6%</td></tr>
+                <tr><td>2.5</td><td>5.66 cm</td><td>5.50 cm</td><td class="error-mid">2.8%</td></tr>
+                <tr><td>7.5</td><td>2.29 cm</td><td>2.10 cm</td><td class="error-high">8.3%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%;" onclick="showToast('生成成功', '电场图像已根据当前参数重新绘制。', 'success')">生成电场图</button>
+      </div>
+
+      <!-- Canvas Area -->
+      <div class="canvas-area">
+        <div class="canvas-wrapper">
+          <canvas id="fieldCanvas" width="700" height="550"></canvas>
+        </div>
+
+        <div class="canvas-tools">
+          <button class="btn btn-icon btn-ghost" onclick="zoomIn()">⊕</button>
+          <button class="btn btn-icon btn-ghost" onclick="zoomOut()">⊖</button>
+          <button class="btn btn-icon btn-ghost" onclick="resetView()">⟲</button>
+        </div>
+
+        <div class="legend-bar">
+          <div class="legend-item">
+            <div class="legend-line" style="border-color: #1E40AF;"></div>
+            <span>电极边界</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-line" style="border-color: #EF4444;"></div>
+            <span>电力线</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-line" style="border-color: #0F172A;"></div>
+            <span>实线=基于实测点</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-line dashed" style="border-color: #64748B;"></div>
+            <span>虚线=基于理论公式</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#EF4444;"></div>
+            <span>5V 等势线</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#F59E0B;"></div>
+            <span>2.5V 等势线</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== HELP ==================== -->
+  <section class="section" id="help" style="display:none;">
+    <div class="help-layout">
+      <aside class="help-nav">
+        <ul>
+          <li><a href="#h-guide" class="active" onclick="activateHelpLink(this)">使用指南</a></li>
+          <li><a href="#h-params" onclick="activateHelpLink(this)">参数说明</a></li>
+          <li><a href="#h-error" onclick="activateHelpLink(this)">误差分析</a></li>
+          <li><a href="#h-faq" onclick="activateHelpLink(this)">常见问题</a></li>
+          <li><a href="#h-shortcuts" onclick="activateHelpLink(this)">快捷键</a></li>
+        </ul>
+      </aside>
+      <div class="help-content">
+        <section id="h-guide">
+          <h2>使用指南</h2>
+          <p>欢迎使用静电场实验室！本工具旨在帮助你完成大学物理中的静电场模拟描绘实验。你可以在同轴电极和平行电极两种模式之间自由切换。</p>
+          <p>实验的基本流程如下：</p>
+          <ul>
+            <li>在左侧边栏输入电极的几何参数和电压值。</li>
+            <li>在「等势线数据」卡片中添加测量点坐标。</li>
+            <li>点击「生成电场图」按钮，系统将自动绘制等势线和电力线。</li>
+            <li>通过「数据分析」卡片查看理论值与实测值的误差。</li>
+          </ul>
+        </section>
+        <section id="h-params">
+          <h2>参数说明</h2>
+          <p><strong>同轴电极模式：</strong>模拟同轴圆柱形电容器。需要设置圆心坐标、内外半径以及对应的内外电压。系统默认内电极接高电位，外电极接地。</p>
+          <p><strong>平行电极模式：</strong>模拟平行板电容器。需要设置左右极板的 X 坐标、Y 方向起止坐标以及左右电压。</p>
+          <p>所有长度单位均为厘米（cm），电压单位为伏特（V）。请确保输入的数值在合理范围内，以避免计算溢出。</p>
+        </section>
+        <section id="h-error">
+          <h2>误差分析</h2>
+          <p>系统会自动将实测等势线位置与理论公式计算结果进行对比，并输出相对误差百分比。</p>
+          <ul>
+            <li><span class="error-low">绿色 (&lt;5%)</span>：测量精度良好，数据可信。</li>
+            <li><span class="error-mid">黄色 (5%-10%)</span>：存在一定偏差，建议检查测量方法。</li>
+            <li><span class="error-high">红色 (&gt;10%)</span>：偏差较大，请重新核对数据或实验条件。</li>
+          </ul>
+        </section>
+        <section id="h-faq">
+          <h2>常见问题</h2>
+          <p><strong>画布显示不完整怎么办？</strong><br>请尝试使用浏览器的缩放功能（Ctrl/Cmd + -）调整页面比例，或者在更大分辨率的屏幕上查看。</p>
+          <p><strong>可以保存我的实验数据吗？</strong><br>当前演示版本暂不支持数据持久化，建议将参数记录到本地实验报告中。</p>
+          <p><strong>导出图片的分辨率是多少？</strong><br>导出的 PNG 图像尺寸与画布当前分辨率一致，默认为 700×550 像素。</p>
+        </section>
+        <section id="h-shortcuts">
+          <h2>快捷键</h2>
+          <table class="kbd-table">
+            <thead><tr><th>功能</th><th>快捷键</th></tr></thead>
+            <tbody>
+              <tr><td>生成电场图</td><td><kbd>Ctrl</kbd> + <kbd>Enter</kbd></td></tr>
+              <tr><td>导出图像</td><td><kbd>Ctrl</kbd> + <kbd>S</kbd></td></tr>
+              <tr><td>缩放画布</td><td><kbd>Ctrl</kbd> + 滚轮</td></tr>
+              <tr><td>重置视图</td><td><kbd>R</kbd></td></tr>
+              <tr><td>切换模式</td><td><kbd>Tab</kbd></td></tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Toast Container -->
+<div class="toast-area" id="toastArea"></div>
+
+<!-- Toast Demo Panel -->
+<div class="toast-panel" id="toastPanel">
+  <div class="toast-panel-title">Toast 演示</div>
+  <button class="btn btn-secondary btn-sm" onclick="showToast('生成成功', '电场图像已成功绘制。', 'success')">模拟生成成功</button>
+  <button class="btn btn-secondary btn-sm" onclick="showToast('导出图片', '图片已保存至本地。', 'info')">模拟导出图片</button>
+  <button class="btn btn-secondary btn-sm" onclick="showToast('添加等势线', '已添加一条新的等势线。', 'info')">模拟添加等势线</button>
+  <button class="btn btn-secondary btn-sm" onclick="showToast('错误提示', '输入的数据格式不正确，请检查。', 'error')">模拟错误提示</button>
+</div>
+
+<!-- Back to top -->
+<div class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+  // ==================== State ====================
+  let currentMode = 'coaxial';
+  let canvasScale = 1;
+
+  // ==================== Navigation ====================
+  function switchPage(page) {
+    ['home', 'lab', 'help'].forEach(p => {
+      document.getElementById(p).style.display = p === page ? 'block' : 'none';
+    });
+    document.querySelectorAll('.nav-link').forEach(el => {
+      el.classList.toggle('active', el.dataset.page === page);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (page === 'lab') {
+      setTimeout(drawCanvas, 50);
+    }
+  }
+
+  // ==================== Navbar Scroll Shadow ====================
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    nav.classList.toggle('scrolled', window.scrollY > 4);
+    document.getElementById('backTop').classList.toggle('visible', window.scrollY > 400);
+  });
+
+  // ==================== Mode Switch ====================
+  function setMode(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+    document.getElementById('params-coaxial').style.display = mode === 'coaxial' ? 'block' : 'none';
+    document.getElementById('params-parallel').style.display = mode === 'parallel' ? 'block' : 'none';
+    if (document.getElementById('lab').style.display !== 'none') {
+      drawCanvas();
+    }
+  }
+
+  // ==================== Collapsible Cards ====================
+  function toggleCard(id) {
+    document.getElementById(id).classList.toggle('collapsed');
+  }
+  function toggleEquip(header) {
+    const card = header.parentElement;
+    const body = card.querySelector('.equip-body');
+    const icon = header.querySelector('.toggle-icon');
+    if (body.style.display === 'none') {
+      body.style.display = 'block';
+      icon.textContent = '▼';
+    } else {
+      body.style.display = 'none';
+      icon.textContent = '▶';
+    }
+  }
+
+  // ==================== Toast ====================
+  function showToast(title, message, type) {
+    const area = document.getElementById('toastArea');
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-' + (type || 'info');
+    toast.innerHTML = '<strong style="display:block;margin-bottom:4px;color:var(--dark);">' + title + '</strong>' + message;
+    area.appendChild(toast);
+    setTimeout(() => {
+      toast.style.animation = 'fadeOut 0.3s ease-out forwards';
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  // ==================== Canvas Drawing ====================
+  function drawCanvas() {
+    const canvas = document.getElementById('fieldCanvas');
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    // Background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, w, h);
+
+    // Grid
+    ctx.strokeStyle = '#E2E8F0';
+    ctx.lineWidth = 1;
+    const gridSize = 35;
+    for (let x = 0; x <= w; x += gridSize) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+    }
+    for (let y = 0; y <= h; y += gridSize) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+    }
+
+    if (currentMode === 'coaxial') {
+      drawCoaxial(ctx, w, h);
+    } else {
+      drawParallel(ctx, w, h);
+    }
+
+    // Axes
+    ctx.strokeStyle = '#94A3B8';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(w/2, 10); ctx.lineTo(w/2, h-10); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(10, h/2); ctx.lineTo(w-10, h/2); ctx.stroke();
+
+    // Axis labels
+    ctx.fillStyle = '#64748B';
+    ctx.font = '12px sans-serif';
+    ctx.fillText('X', w-20, h/2+14);
+    ctx.fillText('Y', w/2+6, 18);
+    ctx.fillText('O', w/2+4, h/2+14);
+  }
+
+  function drawCoaxial(ctx, w, h) {
+    const cx = w / 2, cy = h / 2;
+    const scale = 28; // pixels per cm approx
+
+    // Equipotential circles
+    ctx.setLineDash([5, 5]);
+    ctx.strokeStyle = '#64748B';
+    ctx.lineWidth = 1.5;
+    [3.15, 5.66].forEach(r => {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * scale, 0, Math.PI * 2);
+      ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    // Field lines (radial)
+    ctx.strokeStyle = '#EF4444';
+    ctx.lineWidth = 1;
+    for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 6) {
+      ctx.beginPath();
+      ctx.moveTo(cx + 2.2 * scale * Math.cos(angle), cy + 2.2 * scale * Math.sin(angle));
+      ctx.lineTo(cx + 7.8 * scale * Math.cos(angle), cy + 7.8 * scale * Math.sin(angle));
+      ctx.stroke();
+    }
+
+    // Inner electrode
+    ctx.strokeStyle = '#1E40AF';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 2.0 * scale, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Outer electrode
+    ctx.beginPath();
+    ctx.arc(cx, cy, 8.0 * scale, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Sample measured points
+    drawPoint(ctx, cx + 3.2 * scale, cy, '#EF4444');
+    drawPoint(ctx, cx, cy + 3.2 * scale, '#EF4444');
+    drawPoint(ctx, cx - 3.2 * scale, cy, '#EF4444');
+    drawPoint(ctx, cx, cy - 3.2 * scale, '#EF4444');
+
+    drawPoint(ctx, cx + 5.5 * scale, cy, '#F59E0B');
+    drawPoint(ctx, cx, cy + 5.5 * scale, '#F59E0B');
+    drawPoint(ctx, cx - 5.5 * scale, cy, '#F59E0B');
+    drawPoint(ctx, cx, cy - 5.5 * scale, '#F59E0B');
+  }
+
+  function drawParallel(ctx, w, h) {
+    const scale = 28;
+    const leftX = w/2 - 6 * scale;
+    const rightX = w/2 + 6 * scale;
+    const topY = h/2 - 6 * scale;
+    const botY = h/2 + 6 * scale;
+
+    // Field lines (horizontal)
+    ctx.strokeStyle = '#EF4444';
+    ctx.lineWidth = 1;
+    for (let y = topY + scale; y < botY; y += scale * 1.5) {
+      ctx.beginPath();
+      ctx.moveTo(leftX + 0.3 * scale, y);
+      ctx.lineTo(rightX - 0.3 * scale, y);
+      ctx.stroke();
+    }
+
+    // Equipotential dashed lines
+    ctx.setLineDash([5, 5]);
+    ctx.strokeStyle = '#64748B';
+    ctx.lineWidth = 1.5;
+    for (let x = leftX + 2 * scale; x < rightX; x += 2 * scale) {
+      ctx.beginPath();
+      ctx.moveTo(x, topY + 0.3 * scale);
+      ctx.lineTo(x, botY - 0.3 * scale);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // Electrodes
+    ctx.strokeStyle = '#1E40AF';
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(leftX, topY); ctx.lineTo(leftX, botY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(rightX, topY); ctx.lineTo(rightX, botY); ctx.stroke();
+
+    // Sample points
+    const mid1 = leftX + 2.4 * scale;
+    const mid2 = leftX + 4.8 * scale;
+    drawPoint(ctx, mid1, h/2, '#EF4444');
+    drawPoint(ctx, mid2, h/2, '#F59E0B');
+  }
+
+  function drawPoint(ctx, x, y, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  // ==================== Canvas Tools ====================
+  function zoomIn() {
+    canvasScale = Math.min(canvasScale + 0.2, 2.0);
+    applyZoom();
+  }
+  function zoomOut() {
+    canvasScale = Math.max(canvasScale - 0.2, 0.5);
+    applyZoom();
+  }
+  function resetView() {
+    canvasScale = 1;
+    applyZoom();
+  }
+  function applyZoom() {
+    const canvas = document.getElementById('fieldCanvas');
+    canvas.style.transform = 'scale(' + canvasScale + ')';
+    canvas.style.transformOrigin = 'center center';
+  }
+
+  // ==================== Help Nav ====================
+  function activateHelpLink(el) {
+    document.querySelectorAll('.help-nav a').forEach(a => a.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // ==================== Init ====================
+  window.addEventListener('DOMContentLoaded', () => {
+    drawCanvas();
+    // Auto-collapse second equipotential for demo
+    document.querySelectorAll('.equip-header')[1]?.click();
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'r' || e.key === 'R') resetView();
+    if (e.ctrlKey && e.key === 'Enter') showToast('生成成功', '电场图像已成功绘制。', 'success');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhysLab - 探索物理实验的无限可能</title>
+  <style>
+    :root {
+      --primary: #0D9488;
+      --primary-dark: #134E4A;
+      --primary-light: #14B8A6;
+      --accent: #F97316;
+      --accent-light: #FB923C;
+      --dark: #111827;
+      --text: #374151;
+      --text-secondary: #6B7280;
+      --bg: #FAFAFA;
+      --card: #FFFFFF;
+      --border: #E5E7EB;
+      --success: #22C55E;
+      --warning: #EAB308;
+      --error: #EF4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ===== Scrollbar ===== */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+    /* ===== Toast ===== */
+    #toast-container {
+      position: fixed;
+      top: 80px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toast {
+      background: var(--card);
+      color: var(--text);
+      padding: 12px 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border-left: 4px solid var(--primary);
+      font-size: 14px;
+      animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 220px;
+    }
+    .toast.success { border-left-color: var(--success); }
+    .toast.warning { border-left-color: var(--warning); }
+    .toast.error { border-left-color: var(--error); }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateX(0); }
+      to { opacity: 0; transform: translateX(40px); }
+    }
+
+    /* ===== Navbar ===== */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 64px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    .navbar.scrolled {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .navbar.scrolled .logo { color: var(--dark); }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .navbar.scrolled .nav-links a { color: var(--text); }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .nav-icon {
+      width: 40px; height: 40px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #fff;
+      font-size: 18px;
+      transition: all 0.3s;
+    }
+    .navbar.scrolled .nav-icon { color: var(--text); }
+    .nav-icon:hover { background: rgba(0,0,0,0.05); }
+    .nav-avatar {
+      width: 36px; height: 36px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ===== Sections Common ===== */
+    .section { display: none; animation: fadeIn 0.4s ease; }
+    .section.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Home - Hero ===== */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      min-height: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 100px 32px 60px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 320px; height: 320px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 240px; height: 240px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+    .hero-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      width: 100%;
+      gap: 60px;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-content { flex: 1; }
+    .hero-content h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+    .hero-content p {
+      font-size: 16px;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 32px;
+      max-width: 480px;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(249,115,22,0.3);
+    }
+    .btn-accent:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(249,115,22,0.35);
+    }
+    .btn-outline {
+      background: transparent;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,0.5);
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: #fff;
+      transform: translateY(-2px);
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(13,148,136,0.25);
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-2px);
+    }
+    .btn-sm { padding: 8px 18px; font-size: 13px; }
+    .btn-pill { border-radius: 9999px; }
+
+    .hero-illust {
+      width: 360px;
+      height: 280px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .illust-beaker {
+      position: absolute;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      width: 120px; height: 150px;
+      border: 3px solid rgba(255,255,255,0.4);
+      border-top: none;
+      border-radius: 0 0 16px 16px;
+      background: rgba(255,255,255,0.08);
+    }
+    .illust-beaker::before {
+      content: '';
+      position: absolute;
+      top: -12px; left: -3px; right: -3px;
+      height: 12px;
+      border: 3px solid rgba(255,255,255,0.4);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+    }
+    .illust-liquid {
+      position: absolute;
+      bottom: 8px; left: 8px; right: 8px;
+      height: 70px;
+      background: rgba(249,115,22,0.3);
+      border-radius: 0 0 10px 10px;
+    }
+    .illust-bubble {
+      position: absolute;
+      background: rgba(255,255,255,0.25);
+      border-radius: 50%;
+    }
+    .illust-field-line {
+      position: absolute;
+      height: 2px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 2px;
+    }
+    .illust-field-line::after {
+      content: '';
+      position: absolute;
+      right: -6px; top: -3px;
+      width: 0; height: 0;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-left: 6px solid rgba(255,255,255,0.25);
+    }
+
+    /* ===== Home - Courses ===== */
+    .courses-section {
+      padding: 64px 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-header { text-align: center; margin-bottom: 40px; }
+    .section-header h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+    .section-header p { color: var(--text-secondary); font-size: 15px; }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .course-card {
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+    .course-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .course-card.highlight { border-color: var(--primary); }
+    .course-card-top {
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+    .course-card:nth-child(1) .course-card-top { background: linear-gradient(135deg, #ECFDF5, #D1FAE5); }
+    .course-card:nth-child(2) .course-card-top { background: linear-gradient(135deg, #F3F4F6, #E5E7EB); }
+    .course-card:nth-child(3) .course-card-top { background: linear-gradient(135deg, #EFF6FF, #DBEAFE); }
+    .course-card-body { padding: 24px; }
+    .course-card-body h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+    .course-card-body p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+    .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .tag {
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 500;
+      background: var(--bg);
+      color: var(--text-secondary);
+    }
+    .tag.primary { background: #ECFDF5; color: var(--primary); }
+
+    /* ===== Home - Path ===== */
+    .path-section {
+      background: #ECFDF5;
+      padding: 64px 32px;
+    }
+    .path-inner { max-width: 1000px; margin: 0 auto; }
+    .timeline {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-top: 40px;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 28px; left: 10%; right: 10%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border-radius: 3px;
+      z-index: 0;
+    }
+    .timeline-item {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .timeline-dot {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border: 3px solid var(--primary);
+    }
+    .timeline-item h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+    .timeline-item p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ===== Experiment Page ===== */
+    .exp-header {
+      background: var(--card);
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
+      margin-top: 64px;
+    }
+    .exp-header-inner { max-width: 1200px; margin: 0 auto; }
+    .breadcrumb {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    .breadcrumb a { color: var(--text-secondary); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--primary); }
+    .breadcrumb span { margin: 0 6px; }
+    .exp-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 12px;
+    }
+    .exp-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .exp-meta .tag { background: #ECFDF5; color: var(--primary); }
+    .progress-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 9999px;
+      overflow: hidden;
+      max-width: 300px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border-radius: 9999px;
+      width: 0%;
+      transition: width 1s ease;
+    }
+    .progress-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    /* ===== Tab Navigation ===== */
+    .tab-nav {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--border);
+      background: var(--card);
+      padding: 0 32px;
+      position: sticky;
+      top: 64px;
+      z-index: 100;
+    }
+    .tab-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; width: 100%; }
+    .tab-btn {
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      margin-bottom: -2px;
+    }
+    .tab-btn:hover { color: var(--primary); }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-panel { display: none; animation: fadeIn 0.3s ease; padding: 32px; max-width: 1200px; margin: 0 auto; }
+    .tab-panel.active { display: block; }
+
+    /* ===== Tab: Principle ===== */
+    .principle-layout { display: flex; gap: 32px; flex-wrap: wrap; }
+    .principle-left { flex: 1.5; min-width: 400px; }
+    .principle-right { flex: 1; min-width: 300px; }
+
+    .principle-left p { margin-bottom: 20px; color: var(--text); }
+
+    .formula-box {
+      background: linear-gradient(135deg, #ECFDF5, #F0FDFA);
+      border: 1px solid #A7F3D0;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      text-align: center;
+      font-size: 18px;
+      font-family: "Times New Roman", Georgia, serif;
+      color: var(--dark);
+      position: relative;
+    }
+    .formula-box .var {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      cursor: help;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .formula-box .var:hover {
+      background: rgba(13,148,136,0.15);
+    }
+    .tooltip {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 10;
+    }
+    .var:hover .tooltip { opacity: 1; }
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%; left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--dark);
+    }
+
+    .concept-cards { display: flex; gap: 16px; flex-wrap: wrap; }
+    .concept-card {
+      flex: 1;
+      min-width: 160px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .concept-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border-color: var(--primary-light);
+    }
+    .concept-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .concept-card h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+    .concept-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .diagram-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+    .coaxial-diagram {
+      width: 220px; height: 220px;
+      margin: 0 auto 16px;
+      position: relative;
+    }
+    .coax-outer {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      border: 3px solid var(--primary);
+      border-radius: 50%;
+    }
+    .coax-inner {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px; height: 60px;
+      background: var(--primary-dark);
+      border-radius: 50%;
+    }
+    .coax-line {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 50%; height: 2px;
+      background: var(--accent);
+      transform-origin: left center;
+    }
+    .coax-line::after {
+      content: '';
+      position: absolute;
+      right: -5px; top: -4px;
+      border: 4px solid transparent;
+      border-left: 6px solid var(--accent);
+    }
+    .coax-equi {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border-style: dashed;
+    }
+    .legend { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); }
+    .legend-color { width: 16px; height: 16px; border-radius: 4px; }
+
+    /* ===== Tab: Experiment ===== */
+    .exp-layout { display: flex; gap: 24px; height: calc(100vh - 200px); min-height: 560px; }
+    .exp-sidebar {
+      width: 380px;
+      background: var(--card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .exp-sidebar h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+    .form-group { margin-bottom: 12px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      color: var(--text);
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(13,148,136,0.1);
+    }
+    .data-list { display: flex; flex-direction: column; gap: 8px; }
+    .data-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--bg);
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+      font-size: 13px;
+    }
+    .data-item span:first-child { color: var(--text-secondary); }
+    .data-item span:last-child { font-weight: 600; color: var(--dark); }
+    .data-item:nth-child(2) { border-left-color: var(--accent); }
+    .data-item:nth-child(3) { border-left-color: var(--warning); }
+    .data-item:nth-child(4) { border-left-color: var(--success); }
+    .sidebar-actions { display: flex; gap: 10px; margin-top: auto; }
+
+    .exp-main {
+      flex: 1;
+      background: var(--card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .exp-toolbar {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .toolbar-label { font-size: 13px; font-weight: 600; color: var(--dark); }
+    .checkbox-group { display: flex; gap: 14px; flex-wrap: wrap; }
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .checkbox-group input[type="checkbox"] {
+      width: 16px; height: 16px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .canvas-wrap {
+      flex: 1;
+      position: relative;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .canvas-wrap canvas { max-width: 100%; max-height: 100%; }
+    .canvas-tools {
+      position: absolute;
+      top: 16px; right: 16px;
+      display: flex;
+      gap: 8px;
+    }
+    .canvas-tool-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .canvas-tool-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(13,148,136,0.25);
+    }
+
+    /* ===== Tab: Analysis ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .stat-value.green { color: var(--success); }
+    .stat-value.yellow { color: var(--warning); }
+    .stat-value.blue { color: var(--primary); }
+    .stat-value.purple { color: #8B5CF6; }
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .charts-row { display: flex; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; }
+    .chart-box {
+      flex: 1;
+      min-width: 300px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .chart-box h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 20px;
+    }
+    .bar-chart { display: flex; align-items: flex-end; gap: 16px; height: 160px; padding: 0 20px; }
+    .bar-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .bar {
+      width: 100%;
+      border-radius: 6px 6px 0 0;
+      min-height: 20px;
+      transition: height 0.8s ease;
+    }
+    .bar-label { font-size: 12px; color: var(--text-secondary); }
+    .line-chart {
+      height: 160px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 10px 20px;
+    }
+    .line-chart svg { width: 100%; height: 100%; }
+
+    .data-table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .data-table-wrap h4 {
+      padding: 16px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--dark);
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th, .data-table td {
+      padding: 12px 20px;
+      text-align: left;
+      font-size: 13px;
+    }
+    .data-table th {
+      background: var(--bg);
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .data-table tbody tr { border-top: 1px solid var(--border); transition: background 0.2s; }
+    .data-table tbody tr:hover { background: #F9FAFB; }
+    .data-table td { color: var(--text); }
+
+    /* ===== Tab: Report ===== */
+    .report-actions { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .paper {
+      background: var(--card);
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px 56px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border: 1px solid var(--border);
+      min-height: 900px;
+    }
+    .paper h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--dark);
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .paper-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+      padding: 16px;
+      background: var(--bg);
+      border-radius: 8px;
+    }
+    .paper-info-item { font-size: 13px; color: var(--text-secondary); }
+    .paper-info-item strong { color: var(--dark); font-weight: 500; }
+    .paper h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--dark);
+      margin: 24px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary);
+      display: inline-block;
+    }
+    .paper p {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+    .paper .placeholder-img {
+      width: 100%;
+      height: 160px;
+      background: var(--bg);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin: 16px 0;
+      border: 2px dashed var(--border);
+    }
+
+    /* ===== Profile ===== */
+    .profile-section {
+      padding: 100px 32px 64px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .profile-section h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 32px;
+    }
+    .history-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+    .history-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      transition: all 0.3s;
+    }
+    .history-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .history-info h4 { font-size: 16px; font-weight: 600; color: var(--dark); }
+    .history-info p { font-size: 13px; color: var(--text-secondary); }
+    .history-status {
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .history-status.done { background: #ECFDF5; color: var(--success); }
+    .history-status.ongoing { background: #FFFBEB; color: var(--warning); }
+    .report-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .report-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s;
+    }
+    .report-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .report-card h4 { font-size: 15px; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
+    .report-card p { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+
+    /* ===== Footer ===== */
+    .footer {
+      background: var(--dark);
+      color: #9CA3AF;
+      padding: 48px 32px 24px;
+      margin-top: 40px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+    .footer-col h4 {
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .footer-col a {
+      display: block;
+      color: #9CA3AF;
+      text-decoration: none;
+      font-size: 13px;
+      margin-bottom: 10px;
+      transition: color 0.3s;
+    }
+    .footer-col a:hover { color: var(--primary-light); }
+    .footer-bottom {
+      text-align: center;
+      font-size: 13px;
+      color: #6B7280;
+      padding-top: 24px;
+      border-top: 1px solid #374151;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero-inner { flex-direction: column; text-align: center; }
+      .hero-illust { width: 280px; height: 200px; }
+      .exp-layout { flex-direction: column; height: auto; }
+      .exp-sidebar { width: 100%; }
+      .timeline { flex-direction: column; }
+      .timeline::before { display: none; }
+      .principle-layout { flex-direction: column; }
+      .charts-row { flex-direction: column; }
+      .paper { padding: 32px 24px; }
+      .paper-info { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <a href="#home" class="logo" onclick="showSection('home')">
+    <div class="logo-icon">⚛</div>
+    <span>PhysLab</span>
+  </a>
+  <div class="nav-links">
+    <a href="#home" onclick="showSection('home')">首页</a>
+    <a href="#experiment" onclick="showSection('experiment');showToast('欢迎来到静电场模拟实验','success')">课程</a>
+    <a href="#experiment" onclick="showSection('experiment')">实验</a>
+    <a href="#home" onclick="showToast('帮助中心即将上线','warning')">帮助</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-icon" title="搜索">🔍</div>
+    <div class="nav-icon" title="通知">🔔</div>
+    <div class="nav-avatar">U</div>
+  </div>
+</nav>
+
+<!-- ==================== HOME ==================== -->
+<section id="home" class="section active">
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <h1>探索物理实验的无限可能</h1>
+        <p>从静电场到电磁波，一站式虚拟实验平台。在这里，每一个公式都栩栩如生，每一次实验都触手可及。</p>
+        <div class="hero-btns">
+          <a href="#experiment" class="btn btn-accent" onclick="showSection('experiment');showToast('欢迎来到静电场模拟实验','success')">
+            🚀 开始学习
+          </a>
+          <a href="#experiment" class="btn btn-outline" onclick="showSection('experiment')">
+            📚 查看课程
+          </a>
+        </div>
+      </div>
+      <div class="hero-illust">
+        <div class="illust-beaker">
+          <div class="illust-liquid"></div>
+          <div class="illust-bubble" style="width:10px;height:10px;bottom:50px;left:20px;"></div>
+          <div class="illust-bubble" style="width:6px;height:6px;bottom:70px;left:40px;"></div>
+          <div class="illust-bubble" style="width:8px;height:8px;bottom:60px;left:70px;"></div>
+        </div>
+        <div class="illust-field-line" style="width:80px;top:60px;left:30px;transform:rotate(-15deg);"></div>
+        <div class="illust-field-line" style="width:60px;top:100px;left:20px;transform:rotate(10deg);"></div>
+        <div class="illust-field-line" style="width:70px;top:80px;right:20px;transform:rotate(15deg);"></div>
+        <div class="illust-bubble" style="width:40px;height:40px;top:30px;right:50px;opacity:0.15;"></div>
+        <div class="illust-bubble" style="width:25px;height:25px;bottom:40px;left:30px;opacity:0.12;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Courses -->
+  <div class="courses-section">
+    <div class="section-header">
+      <h2>热门实验课程</h2>
+      <p>选择一门课程，开始你的探索之旅</p>
+    </div>
+    <div class="course-grid">
+      <div class="course-card highlight">
+        <div class="course-card-top">⚡</div>
+        <div class="course-card-body">
+          <h3>静电场模拟</h3>
+          <p>静电场描绘、等势线测量与数据可视化。通过交互式模拟深入理解电场分布规律。</p>
+          <div class="tags">
+            <span class="tag primary">物理</span>
+            <span class="tag">电磁学</span>
+          </div>
+          <a href="#experiment" class="btn btn-primary btn-sm" onclick="showSection('experiment');showToast('欢迎来到静电场模拟实验','success')">进入学习 →</a>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="course-card-top">🧲</div>
+        <div class="course-card-body">
+          <h3>磁场分布</h3>
+          <p>圆形电流磁场、亥姆霍兹线圈。探索磁场的对称美与毕奥-萨伐尔定律的应用。</p>
+          <div class="tags">
+            <span class="tag primary">物理</span>
+            <span class="tag">电磁学</span>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('课程筹备中，敬请期待','warning')">进入学习 →</button>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="course-card-top">🌈</div>
+        <div class="course-card-body">
+          <h3>光学干涉</h3>
+          <p>双缝干涉、牛顿环测量。光的波动特性在精密测量中的经典应用。</p>
+          <div class="tags">
+            <span class="tag primary">物理</span>
+            <span class="tag">光学</span>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('课程筹备中，敬请期待','warning')">进入学习 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Learning Path -->
+  <div class="path-section">
+    <div class="path-inner">
+      <div class="section-header">
+        <h2>三步完成一个实验</h2>
+        <p>清晰的学习路径，让物理实验变得简单有趣</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot">📖</div>
+          <h4>学习原理</h4>
+          <p>观看交互式教程<br>理解核心公式与概念</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">🧪</div>
+          <h4>动手实验</h4>
+          <p>录入数据并观察现象<br>实时可视化实验结果</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">📄</div>
+          <h4>生成报告</h4>
+          <p>自动分析并导出<br>专业的实验报告</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <h4>关于我们</h4>
+        <a href="#">团队介绍</a>
+        <a href="#">发展历程</a>
+        <a href="#">加入我们</a>
+      </div>
+      <div class="footer-col">
+        <h4>课程</h4>
+        <a href="#">电磁学</a>
+        <a href="#">光学</a>
+        <a href="#">力学</a>
+      </div>
+      <div class="footer-col">
+        <h4>资源</h4>
+        <a href="#">实验手册</a>
+        <a href="#">视频教程</a>
+        <a href="#">常见问题</a>
+      </div>
+      <div class="footer-col">
+        <h4>联系</h4>
+        <a href="#">feedback@physlab.cn</a>
+        <a href="#">400-888-0000</a>
+        <a href="#">北京市海淀区</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2024 PhysLab 虚拟实验平台. All rights reserved.</div>
+  </footer>
+</section>
+
+<!-- ==================== EXPERIMENT ==================== -->
+<section id="experiment" class="section">
+  <!-- Header -->
+  <div class="exp-header">
+    <div class="exp-header-inner">
+      <div class="breadcrumb">
+        <a href="#home" onclick="showSection('home')">首页</a>
+        <span>></span>
+        <a href="#">课程</a>
+        <span>></span>
+        <a href="#">电磁学</a>
+        <span>></span>
+        <span style="color:var(--text);">静电场模拟</span>
+      </div>
+      <h1 class="exp-title">静电场模拟描绘实验</h1>
+      <div class="exp-meta">
+        <span class="tag">物理</span>
+        <span class="tag">电磁学</span>
+        <span class="tag">⏱ 2小时</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-text">已完成 0%</div>
+    </div>
+  </div>
+
+  <!-- Tab Nav -->
+  <div class="tab-nav">
+    <div class="tab-nav-inner">
+      <button class="tab-btn active" onclick="switchTab('principle')">📖 原理</button>
+      <button class="tab-btn" onclick="switchTab('experiment')">🧪 实验</button>
+      <button class="tab-btn" onclick="switchTab('analysis')">📊 数据分析</button>
+      <button class="tab-btn" onclick="switchTab('report')">📄 报告</button>
+    </div>
+  </div>
+
+  <!-- Tab 1: Principle -->
+  <div id="tab-principle" class="tab-panel active">
+    <div class="principle-layout">
+      <div class="principle-left">
+        <p>本实验通过模拟法描绘静电场的等势线和电力线分布。由于直接测量静电场较为困难，我们利用稳恒电流场与静电场的相似性，通过测量导电介质中的电势分布来间接获得静电场的分布。</p>
+
+        <div class="formula-box">
+          <div class="var">V<div class="tooltip">电势函数</div></div>(<div class="var">r<div class="tooltip">到中心的距离</div></div>) =
+          <div class="var">V₁<div class="tooltip">内电极电压</div></div> +
+          (<div class="var">V₂<div class="tooltip">外电极电压</div></div>−<div class="var">V₁<div class="tooltip">内电极电压</div></div>)·
+          ln(<div class="var">r<div class="tooltip">到中心的距离</div></div>/<div class="var">a<div class="tooltip">内电极半径</div></div>)
+          / ln(<div class="var">b<div class="tooltip">外电极半径</div></div>/<div class="var">a<div class="tooltip">内电极半径</div></div>)
+        </div>
+
+        <h3 style="font-size:18px;font-weight:600;color:var(--dark);margin-bottom:16px;">关键概念</h3>
+        <div class="concept-cards">
+          <div class="concept-card">
+            <div class="concept-icon">⭕</div>
+            <h4>等势线</h4>
+            <p>电势相等的点连成的线，电场线与等势线处处垂直</p>
+          </div>
+          <div class="concept-card">
+            <div class="concept-icon">⚡</div>
+            <h4>电力线</h4>
+            <p>描述电场方向的曲线，起始于正电荷终止于负电荷</p>
+          </div>
+          <div class="concept-card">
+            <div class="concept-icon">📐</div>
+            <h4>电势梯度</h4>
+            <p>电势变化最快的方向，与电场强度方向相反</p>
+          </div>
+        </div>
+      </div>
+      <div class="principle-right">
+        <div class="diagram-box">
+          <h4 style="font-size:15px;font-weight:600;color:var(--dark);margin-bottom:16px;">同轴电极原理示意图</h4>
+          <div class="coaxial-diagram">
+            <div class="coax-outer"></div>
+            <div class="coax-equi" style="width:140px;height:140px;border-color:var(--primary-light);"></div>
+            <div class="coax-equi" style="width:100px;height:100px;border-color:var(--primary);"></div>
+            <div class="coax-equi" style="width:60px;height:60px;border-color:var(--primary-dark);"></div>
+            <div class="coax-inner"></div>
+            <div class="coax-line" style="transform:translate(-50%,-50%) rotate(0deg);"></div>
+            <div class="coax-line" style="transform:translate(-50%,-50%) rotate(45deg);"></div>
+            <div class="coax-line" style="transform:translate(-50%,-50%) rotate(90deg);"></div>
+            <div class="coax-line" style="transform:translate(-50%,-50%) rotate(135deg);"></div>
+          </div>
+          <div class="legend">
+            <div class="legend-item"><div class="legend-color" style="background:var(--primary-dark);"></div> 内电极（高电势）</div>
+            <div class="legend-item"><div class="legend-color" style="background:#fff;border:2px solid var(--primary);"></div> 外电极（低电势）</div>
+            <div class="legend-item"><div class="legend-color" style="border:2px dashed var(--primary);"></div> 等势线（虚线圆）</div>
+            <div class="legend-item"><div class="legend-color" style="background:var(--accent);"></div> 电力线（带箭头径向线）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Experiment -->
+  <div id="tab-experiment" class="tab-panel">
+    <div class="exp-layout">
+      <div class="exp-sidebar">
+        <div>
+          <h3>电极参数</h3>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:13px;color:var(--text-secondary);display:block;margin-bottom:6px;">实验模式</label>
+            <select id="expMode" onchange="drawCanvas()">
+              <option value="coaxial">同轴电极</option>
+              <option value="parallel">平行电极</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>内电极电压 V₁ (V)</label>
+            <input type="number" id="v1" value="10" onchange="drawCanvas()">
+          </div>
+          <div class="form-group">
+            <label>外电极电压 V₂ (V)</label>
+            <input type="number" id="v2" value="0" onchange="drawCanvas()">
+          </div>
+          <div class="form-group">
+            <label>内电极半径 a (mm)</label>
+            <input type="number" id="ra" value="10" onchange="drawCanvas()">
+          </div>
+          <div class="form-group">
+            <label>外电极半径 b (mm)</label>
+            <input type="number" id="rb" value="50" onchange="drawCanvas()">
+          </div>
+        </div>
+
+        <div>
+          <h3>等势线数据</h3>
+          <div class="data-list">
+            <div class="data-item"><span>2V 等势线</span><span>r = 42.3 mm</span></div>
+            <div class="data-item"><span>4V 等势线</span><span>r = 28.6 mm</span></div>
+            <div class="data-item"><span>6V 等势线</span><span>r = 18.9 mm</span></div>
+            <div class="data-item"><span>8V 等势线</span><span>r = 11.2 mm</span></div>
+          </div>
+        </div>
+
+        <div class="sidebar-actions">
+          <button class="btn btn-secondary" style="flex:1;" onclick="showToast('实验数据已自动保存 💾','success')">💾 保存实验</button>
+          <button class="btn btn-primary" style="flex:1;" onclick="showToast('电场图生成成功！','success');drawCanvas();updateProgress(35);">⚡ 生成电场图</button>
+        </div>
+      </div>
+
+      <div class="exp-main">
+        <div class="exp-toolbar">
+          <span class="toolbar-label">显示选项</span>
+          <div class="checkbox-group">
+            <label><input type="checkbox" checked onchange="drawCanvas()"> 网格</label>
+            <label><input type="checkbox"> 坐标轴</label>
+            <label><input type="checkbox" checked onchange="drawCanvas()"> 等势线</label>
+            <label><input type="checkbox" onchange="drawCanvas()"> 电力线</label>
+            <label><input type="checkbox"> 测量点</label>
+          </div>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="expCanvas" width="600" height="480"></canvas>
+          <div class="canvas-tools">
+            <div class="canvas-tool-btn" title="放大" onclick="showToast('缩放功能开发中','warning')">🔍+</div>
+            <div class="canvas-tool-btn" title="缩小" onclick="showToast('缩放功能开发中','warning')">🔍-</div>
+            <div class="canvas-tool-btn" title="重置" onclick="drawCanvas();showToast('画布已重置','success')">↺</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 3: Analysis -->
+  <div id="tab-analysis" class="tab-panel">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value green">2.3%</div>
+        <div class="stat-label">平均相对误差</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value yellow">8.7%</div>
+        <div class="stat-label">最大误差</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value blue">24</div>
+        <div class="stat-label">测量点总数</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value purple">4</div>
+        <div class="stat-label">等势线数</div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-box">
+        <h4>各等势线相对误差分布</h4>
+        <div class="bar-chart">
+          <div class="bar-item">
+            <div class="bar" style="height:30%;background:var(--success);"></div>
+            <span class="bar-label">4V</span>
+          </div>
+          <div class="bar-item">
+            <div class="bar" style="height:45%;background:var(--primary);"></div>
+            <span class="bar-label">6V</span>
+          </div>
+          <div class="bar-item">
+            <div class="bar" style="height:22%;background:var(--primary-light);"></div>
+            <span class="bar-label">8V</span>
+          </div>
+          <div class="bar-item">
+            <div class="bar" style="height:65%;background:var(--warning);"></div>
+            <span class="bar-label">10V</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-box">
+        <h4>理论值 vs 实测值对比</h4>
+        <div class="line-chart">
+          <svg viewBox="0 0 300 140" preserveAspectRatio="none">
+            <line x1="20" y1="120" x2="280" y2="120" stroke="#E5E7EB" stroke-width="1"/>
+            <line x1="20" y1="10" x2="20" y2="120" stroke="#E5E7EB" stroke-width="1"/>
+            <polyline points="20,110 90,85 160,60 230,35" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-dasharray="5,5"/>
+            <polyline points="20,112 90,88 160,62 230,40" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+            <circle cx="20" cy="110" r="3" fill="var(--primary)"/>
+            <circle cx="90" cy="85" r="3" fill="var(--primary)"/>
+            <circle cx="160" cy="60" r="3" fill="var(--primary)"/>
+            <circle cx="230" cy="35" r="3" fill="var(--primary)"/>
+            <circle cx="20" cy="112" r="3" fill="var(--accent)"/>
+            <circle cx="90" cy="88" r="3" fill="var(--accent)"/>
+            <circle cx="160" cy="62" r="3" fill="var(--accent)"/>
+            <circle cx="230" cy="40" r="3" fill="var(--accent)"/>
+            <text x="250" y="30" font-size="10" fill="var(--primary)">理论</text>
+            <text x="250" y="45" font-size="10" fill="var(--accent)">实测</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="data-table-wrap">
+      <h4>详细测量数据</h4>
+      <table class="data-table">
+        <thead>
+          <tr><th>测量点</th><th>理论电压(V)</th><th>实测电压(V)</th><th>绝对误差(V)</th><th>相对误差(%)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>P1</td><td>2.0</td><td>2.05</td><td>0.05</td><td>2.5</td></tr>
+          <tr><td>P2</td><td>4.0</td><td>4.12</td><td>0.12</td><td>3.0</td></tr>
+          <tr><td>P3</td><td>6.0</td><td>6.08</td><td>0.08</td><td>1.3</td></tr>
+          <tr><td>P4</td><td>8.0</td><td>7.95</td><td>0.05</td><td>0.6</td></tr>
+          <tr><td>P5</td><td>10.0</td><td>9.13</td><td>0.87</td><td>8.7</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab 4: Report -->
+  <div id="tab-report" class="tab-panel">
+    <div class="report-actions" style="max-width:800px;margin:0 auto 24px;">
+      <button class="btn btn-primary" onclick="showToast('报告生成中，请稍候…','success');updateProgress(100)">🖼 导出为 PNG</button>
+      <button class="btn btn-secondary" onclick="showToast('报告生成中，请稍候…','success');updateProgress(100)">📄 导出为 PDF</button>
+      <button class="btn btn-secondary" onclick="showToast('正在连接打印机…','warning')">🖨 打印</button>
+    </div>
+    <div class="paper">
+      <h2>静电场模拟描绘实验报告</h2>
+      <div class="paper-info">
+        <div class="paper-info-item"><strong>姓名：</strong> 张三</div>
+        <div class="paper-info-item"><strong>学号：</strong> 2024001001</div>
+        <div class="paper-info-item"><strong>日期：</strong> 2024年04月15日</div>
+      </div>
+
+      <h3>1. 实验目的</h3>
+      <p>掌握用模拟法描绘静电场的原理和方法；加深对电场强度和电势概念的理解；学会使用导电纸描绘等势线分布图。</p>
+
+      <h3>2. 实验原理</h3>
+      <p>本实验采用稳恒电流场模拟静电场。在均匀导电介质中，稳恒电流场的电势分布与真空中的静电场具有相同的数学形式。通过测量导电纸上的电势分布，即可得到相应的静电场分布。</p>
+      <p>同轴圆柱形电极间的电势分布公式为：V(r) = V₁ + (V₂−V₁)·ln(r/a)/ln(b/a)</p>
+
+      <h3>3. 数据记录</h3>
+      <table class="data-table" style="margin:16px 0;">
+        <thead>
+          <tr><th>等势线</th><th>理论半径(mm)</th><th>实测半径(mm)</th><th>相对误差</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2V</td><td>42.3</td><td>43.1</td><td>1.9%</td></tr>
+          <tr><td>4V</td><td>28.6</td><td>29.5</td><td>3.1%</td></tr>
+          <tr><td>6V</td><td>18.9</td><td>19.2</td><td>1.6%</td></tr>
+          <tr><td>8V</td><td>11.2</td><td>11.5</td><td>2.7%</td></tr>
+        </tbody>
+      </table>
+
+      <h3>4. 结果分析</h3>
+      <p>实验测得的等势线分布与理论预测基本一致，呈现出以中心电极为圆心的同心圆分布。测量结果的平均相对误差为2.3%，主要误差来源包括电极接触不良、导电纸不均匀以及测量读数误差。</p>
+      <div class="placeholder-img">📊 等势线分布图</div>
+
+      <h3>5. 结论</h3>
+      <p>通过本次实验，成功验证了同轴电极间静电场的分布规律，等势线为同心圆，电力线为径向直线。模拟法是一种有效的静电场研究方法，测量结果与理论计算吻合良好。</p>
+    </div>
+  </div>
+
+  <!-- Footer for experiment page -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <h4>关于我们</h4>
+        <a href="#">团队介绍</a>
+        <a href="#">发展历程</a>
+      </div>
+      <div class="footer-col">
+        <h4>课程</h4>
+        <a href="#">电磁学</a>
+        <a href="#">光学</a>
+      </div>
+      <div class="footer-col">
+        <h4>联系</h4>
+        <a href="#">feedback@physlab.cn</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2024 PhysLab 虚拟实验平台. All rights reserved.</div>
+  </footer>
+</section>
+
+<!-- ==================== PROFILE ==================== -->
+<section id="profile" class="section">
+  <div class="profile-section">
+    <h2>我的实验</h2>
+
+    <h3 style="font-size:16px;font-weight:600;color:var(--dark);margin-bottom:16px;">实验历史</h3>
+    <div class="history-list">
+      <div class="history-item">
+        <div class="history-info">
+          <h4>⚡ 静电场模拟</h4>
+          <p>2024.04.15 · 电磁学 · 2小时</p>
+        </div>
+        <span class="history-status done">已完成</span>
+        <button class="btn btn-primary btn-sm" onclick="showSection('experiment');switchTab('report');showToast('已打开实验报告','success')">查看报告</button>
+      </div>
+      <div class="history-item">
+        <div class="history-info">
+          <h4>🧲 磁场分布</h4>
+          <p>2024.04.10 · 电磁学 · 1.5小时</p>
+        </div>
+        <span class="history-status ongoing">进行中</span>
+        <button class="btn btn-secondary btn-sm" onclick="showSection('experiment');switchTab('experiment');showToast('继续实验中…','success')">继续实验</button>
+      </div>
+    </div>
+
+    <h3 style="font-size:16px;font-weight:600;color:var(--dark);margin-bottom:16px;">报告管理</h3>
+    <div class="report-grid">
+      <div class="report-card">
+        <h4>📄 静电场模拟实验报告</h4>
+        <p>生成时间：2024.04.15 14:32</p>
+        <button class="btn btn-primary btn-sm" onclick="showToast('报告下载中…','success')">⬇ 下载 PDF</button>
+      </div>
+      <div class="report-card">
+        <h4>📄 磁场分布实验报告（草稿）</h4>
+        <p>生成时间：2024.04.10 16:15</p>
+        <button class="btn btn-secondary btn-sm" onclick="showToast('报告下载中…','success')">⬇ 下载 PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <h4>关于我们</h4>
+        <a href="#">团队介绍</a>
+        <a href="#">发展历程</a>
+      </div>
+      <div class="footer-col">
+        <h4>联系</h4>
+        <a href="#">feedback@physlab.cn</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2024 PhysLab 虚拟实验平台. All rights reserved.</div>
+  </footer>
+</section>
+
+<script>
+/* ===== Section Switching ===== */
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/* ===== Tab Switching ===== */
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+/* ===== Toast ===== */
+function showToast(msg, type='info') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + type;
+  const icons = { success: '✅', warning: '⚠️', error: '❌', info: 'ℹ️' };
+  toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${msg}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+/* ===== Navbar Scroll ===== */
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  if (window.scrollY > 10) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+});
+
+/* ===== Progress Bar ===== */
+function updateProgress(pct) {
+  const fill = document.getElementById('progressFill');
+  if (fill) {
+    fill.style.width = pct + '%';
+    document.querySelector('.progress-text').textContent = '已完成 ' + pct + '%';
+  }
+}
+
+/* ===== Canvas Drawing ===== */
+function drawCanvas() {
+  const canvas = document.getElementById('expCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const mode = document.getElementById('expMode')?.value || 'coaxial';
+
+  // Clear
+  ctx.fillStyle = '#FAFAFA';
+  ctx.fillRect(0, 0, w, h);
+
+  // Grid
+  ctx.strokeStyle = '#E5E7EB';
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= w; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  for (let y = 0; y <= h; y += 40) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+
+  if (mode === 'coaxial') {
+    const cx = w/2, cy = h/2;
+    const maxR = Math.min(w, h) * 0.4;
+    const minR = maxR * 0.2;
+
+    // Equipotential lines
+    ctx.strokeStyle = 'rgba(13,148,136,0.35)';
+    ctx.setLineDash([6, 4]);
+    for (let i = 1; i <= 4; i++) {
+      const r = minR + (maxR - minR) * (i / 5);
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // Field lines
+    const showField = document.querySelectorAll('.checkbox-group input')[3]?.checked;
+    if (showField) {
+      ctx.strokeStyle = 'rgba(249,115,22,0.5)';
+      ctx.lineWidth = 1.5;
+      for (let a = 0; a < Math.PI * 2; a += Math.PI / 6) {
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(a) * minR, cy + Math.sin(a) * minR);
+        ctx.lineTo(cx + Math.cos(a) * maxR, cy + Math.sin(a) * maxR);
+        ctx.stroke();
+        // Arrow
+        const mx = cx + Math.cos(a) * (minR + maxR) / 2;
+        const my = cy + Math.sin(a) * (minR + maxR) / 2;
+        ctx.fillStyle = 'rgba(249,115,22,0.6)';
+        ctx.beginPath();
+        ctx.moveTo(mx, my);
+        ctx.lineTo(mx - 6 * Math.cos(a - 0.4), my - 6 * Math.sin(a - 0.4));
+        ctx.lineTo(mx - 6 * Math.cos(a + 0.4), my - 6 * Math.sin(a + 0.4));
+        ctx.fill();
+      }
+    }
+
+    // Inner electrode
+    ctx.fillStyle = '#134E4A';
+    ctx.beginPath();
+    ctx.arc(cx, cy, minR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#0D9488';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Outer electrode
+    ctx.strokeStyle = '#0D9488';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Labels
+    ctx.fillStyle = '#374151';
+    ctx.font = '13px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('V₁ = ' + (document.getElementById('v1')?.value || 10) + 'V', cx, cy + 5);
+    ctx.fillText('V₂ = ' + (document.getElementById('v2')?.value || 0) + 'V', cx, cy + maxR + 20);
+
+  } else {
+    // Parallel plate mode
+    const plateX1 = w * 0.25, plateX2 = w * 0.75;
+    const plateY1 = h * 0.2, plateY2 = h * 0.8;
+
+    // Equipotential lines (horizontal)
+    ctx.strokeStyle = 'rgba(13,148,136,0.35)';
+    ctx.setLineDash([6, 4]);
+    for (let i = 1; i <= 4; i++) {
+      const y = plateY1 + (plateY2 - plateY1) * (i / 5);
+      ctx.beginPath();
+      ctx.moveTo(plateX1, y);
+      ctx.lineTo(plateX2, y);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // Field lines
+    const showField = document.querySelectorAll('.checkbox-group input')[3]?.checked;
+    if (showField) {
+      ctx.strokeStyle = 'rgba(249,115,22,0.5)';
+      ctx.lineWidth = 1.5;
+      for (let x = plateX1 + 40; x < plateX2; x += 60) {
+        ctx.beginPath();
+        ctx.moveTo(x, plateY1);
+        ctx.lineTo(x, plateY2);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(249,115,22,0.6)';
+        ctx.beginPath();
+        ctx.moveTo(x, (plateY1 + plateY2) / 2);
+        ctx.lineTo(x - 5, (plateY1 + plateY2) / 2 - 5);
+        ctx.lineTo(x + 5, (plateY1 + plateY2) / 2 - 5);
+        ctx.fill();
+      }
+    }
+
+    // Plates
+    ctx.fillStyle = '#134E4A';
+    ctx.fillRect(plateX1 - 5, plateY1 - 5, plateX2 - plateX1 + 10, 10);
+    ctx.fillRect(plateX1 - 5, plateY2 - 5, plateX2 - plateX1 + 10, 10);
+
+    ctx.fillStyle = '#374151';
+    ctx.font = '13px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('V₁ = ' + (document.getElementById('v1')?.value || 10) + 'V', (plateX1 + plateX2) / 2, plateY1 - 14);
+    ctx.fillText('V₂ = ' + (document.getElementById('v2')?.value || 0) + 'V', (plateX1 + plateX2) / 2, plateY2 + 24);
+  }
+}
+
+/* ===== Init ===== */
+document.addEventListener('DOMContentLoaded', () => {
+  drawCanvas();
+  // Animate progress after a short delay
+  setTimeout(() => updateProgress(0), 500);
+});
+</script>
+</body>
+</html>
